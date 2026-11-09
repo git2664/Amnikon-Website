@@ -29,6 +29,9 @@ jobs:
       - name: Test server artifact validation
         shell: pwsh
         run: ./deployment/tests/GitHubFrontendArtifacts.ps1
+      - name: Check homepage assets at the public root URL
+        shell: pwsh
+        run: ./deployment/tests/HomepageEntryPaths.ps1
       - name: Build production frontend only
         shell: pwsh
         run: |
