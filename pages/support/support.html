@@ -7,11 +7,6 @@
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <meta name="description"
-        content="AMNIKON Support - Submit a support ticket or connect with our experts.">
-
-    <title>Support | AMNIKON</title>
-
     <link rel="stylesheet" href="../../assets/css/global.css">
     <link rel="stylesheet" href="../../assets/css/navbar.css">
     <link rel="stylesheet" href="../../assets/css/footer.css">
@@ -19,6 +14,46 @@
 
     <link rel="stylesheet" href="support.css">
 
+<!-- BEGIN GENERATED SEO: deployment/Update-WebsiteSeo.cjs -->
+  <title>Request an IT Consultation | AMNIKON</title>
+  <meta name="description" content="Request a consultation with AMNIKON to discuss managed IT, cloud, cybersecurity or a technology project. Tell us about your business needs.">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://amnikontechnologies.com/pages/support/support.html">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="AMNIKON Technologies">
+  <meta property="og:title" content="Request an IT Consultation | AMNIKON">
+  <meta property="og:description" content="Request a consultation with AMNIKON to discuss managed IT, cloud, cybersecurity or a technology project. Tell us about your business needs.">
+  <meta property="og:url" content="https://amnikontechnologies.com/pages/support/support.html">
+  <meta property="og:image" content="https://amnikontechnologies.com/assets/logos/Amnikon-logo.png">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:image:width" content="4500">
+  <meta property="og:image:height" content="2801">
+  <meta property="og:image:alt" content="AMNIKON Technologies logo">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Request an IT Consultation | AMNIKON">
+  <meta name="twitter:description" content="Request a consultation with AMNIKON to discuss managed IT, cloud, cybersecurity or a technology project. Tell us about your business needs.">
+  <meta name="twitter:image" content="https://amnikontechnologies.com/assets/logos/Amnikon-logo.png">
+  <meta name="twitter:image:alt" content="AMNIKON Technologies logo">
+  <script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "ContactPage",
+      "@id": "https://amnikontechnologies.com/pages/support/support.html#webpage",
+      "url": "https://amnikontechnologies.com/pages/support/support.html",
+      "name": "Request an IT Consultation | AMNIKON",
+      "description": "Request a consultation with AMNIKON to discuss managed IT, cloud, cybersecurity or a technology project. Tell us about your business needs.",
+      "inLanguage": "en",
+      "isPartOf": {
+        "@id": "https://amnikontechnologies.com/#website"
+      },
+      "about": {
+        "@id": "https://amnikontechnologies.com/#organization"
+      }
+    }
+  ]
+}</script>
+  <!-- END GENERATED SEO -->
 </head>
 
 <body>
@@ -27,6 +62,7 @@
 
     <div id="navbar-placeholder"></div>
     <script src="../../components/navbar.js"></script>
+    <main>
 
     <!-- =======================================================
                         SUPPORT SECTION
@@ -43,12 +79,12 @@
                 <div class="support-content">
 
                     <div class="eyebrow">
-                        SUPPORT
+                        LET'S TALK
                     </div>
 
                     <h1>
-                        Talk to an
-                        <span class="highlight">Expert</span>
+                        Request a
+                        <span class="highlight">Consultation</span>
                     </h1>
 
                     <h3>
@@ -56,10 +92,9 @@
                     </h3>
 
                     <p class="intro">
-                        Whether you're experiencing a technical issue,
-                        planning cloud migration, improving cybersecurity,
-                        or modernizing your IT infrastructure,
-                        our specialists are ready to help.
+                        Whether you're exploring managed IT, planning a cloud migration,
+                        strengthening cybersecurity or starting a new project,
+                        tell us about your business and what you need.
                     </p>
 
                     <div class="steps">
@@ -71,7 +106,7 @@
                             </span>
 
                             <p>
-                                Submit your support request with all the necessary details.
+                                Share your requirements and contact details.
                             </p>
 
                         </div>
@@ -83,7 +118,7 @@
                             </span>
 
                             <p>
-                                Our technical team reviews your request and assigns an engineer.
+                                Our team reviews your enquiry and identifies the right specialist.
                             </p>
 
                         </div>
@@ -95,7 +130,7 @@
                             </span>
 
                             <p>
-                                We'll contact you with a solution or schedule a support session.
+                                We'll contact you to discuss your requirements and next steps.
                             </p>
 
                         </div>
@@ -107,7 +142,7 @@
                             </span>
 
                             <p>
-                                We stay with you until your issue is completely resolved.
+                                If you'd like to proceed, we'll agree the scope and next steps with you.
                             </p>
 
                         </div>
@@ -122,20 +157,20 @@
                 <div class="ticket-card">
 
                     <h2>
-                        Tell us about your issue
+                        Tell us about your requirements
                     </h2>
 
                     <p>
-                        Complete the form below and one of our experts will contact you shortly.
+                        Send us an enquiry and our team will review it and contact you.
                     </p>
 
-                    <form id="ticketForm" class="ticket-form">
+                    <form id="ticketForm" data-form-action="enquiry" class="ticket-form">
 
                         <div class="form-row">
 
                             <div class="form-group">
 
-                                <label>
+                                <label for="name">
                                     Name *
                                 </label>
 
@@ -144,13 +179,13 @@
                                     type="text"
                                     id="name"
                                     placeholder="John Smith"
-                                    required>
+                                    required maxlength="200">
 
                             </div>
 
                             <div class="form-group">
 
-                                <label>
+                                <label for="email">
                                     Email *
                                 </label>
 
@@ -159,7 +194,7 @@
                                     type="email"
                                     id="email"
                                     placeholder="john@example.com"
-                                    required>
+                                    required maxlength="254">
 
                             </div>
 
@@ -169,21 +204,21 @@
 
                             <div class="form-group">
 
-                                <label>
-                                    Priority
+                                <label for="priority">
+                                    Urgency
                                 </label>
 
                                 <select
                                     class="form-control"
                                     id="priority">
 
-                                    <option>Low</option>
+                                    <option value="Low">General enquiry</option>
 
-                                    <option>Medium</option>
+                                    <option value="Medium">Planning a project</option>
 
-                                    <option>High</option>
+                                    <option value="High">Time-sensitive enquiry</option>
 
-                                    <option>Critical</option>
+                                    <option value="Critical">Urgent enquiry</option>
 
                                 </select>
 
@@ -191,15 +226,15 @@
 
                             <div class="form-group">
 
-                                <label>
-                                    Category
+                                <label for="category">
+                                    Area of interest
                                 </label>
 
                                 <select
                                     class="form-control"
                                     id="category">
 
-                                    <option>General Support</option>
+                                    <option>General Enquiry</option>
 
                                     <option>Managed IT</option>
 
@@ -217,7 +252,7 @@
 
                         <div class="form-group">
 
-                            <label>
+                            <label for="subject">
                                 Subject *
                             </label>
 
@@ -226,22 +261,22 @@
                                 type="text"
                                 id="subject"
                                 placeholder="Brief subject"
-                                required>
+                                required maxlength="200">
 
                         </div>
 
                         <div class="form-group">
 
-                            <label>
-                                Message *
+                            <label for="message">
+                                Your requirements *
                             </label>
 
                             <textarea
                                 class="form-control"
                                 id="message"
                                 rows="7"
-                                placeholder="Describe your issue..."
-                                required></textarea>
+                                placeholder="Tell us about your requirements or what you would like to discuss..."
+                                required maxlength="5000"></textarea>
 
                         </div>
 
@@ -250,19 +285,19 @@
                             class="btn btn-primary"
                             id="submitBtn">
 
-                            Submit Ticket →
+                            Send Enquiry →
 
                         </button>
 
                         <div
                             class="form-success"
-                            id="successMessage">
+                            id="successMessage" role="status" aria-live="polite" aria-atomic="true">
 
                         </div>
 
                         <div
                             class="form-error"
-                            id="errorMessage">
+                            id="errorMessage" role="alert" aria-atomic="true">
 
                         </div>
 
@@ -278,6 +313,7 @@
 
     <!-- FOOTER -->
 
+    </main>
     <div id="footer-placeholder"></div>
     <script src="../../components/footer.js"></script>
 
@@ -288,6 +324,9 @@
 
     <script src="../../assets/js/global.js"></script>
 
+    <script src="../../assets/js/api-config.js"></script>
+    <script src="../../assets/js/api.js"></script>
+    <script src="../../assets/js/form-protection.js"></script>
     <script src="support.js"></script>
 
 </body>

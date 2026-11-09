@@ -28,8 +28,8 @@
                     </div>
 
                     <h2>
-                        Ready to Transform
-                        Your IT?
+                        <span class="footer-title-line">Ready to Transform Your</span>
+                        <span class="footer-title-line">IT?</span>
                     </h2>
 
                     <p>
@@ -44,12 +44,12 @@
 
                     <a href="../contact/contact.html"
                        class="btn btn-primary">
-                        Contact Us
+                        General Enquiries
                     </a>
 
                     <a href="../support/support.html"
                        class="btn btn-outline">
-                        Get Support
+                        Request a Consultation
                     </a>
 
                 </div>
@@ -101,7 +101,7 @@
 
                         <li>
                             <a href="../about/team.html">
-                                Team
+                                Our People &amp; Culture
                             </a>
                         </li>
 
@@ -129,25 +129,14 @@
                     <h5>Services</h5>
 
                     <ul>
-
-                        <li>
-                            <a href="../services/managed-it.html">
-                                Managed IT
-                            </a>
-                        </li>
-
-                        <li>
-                            <a href="../services/cloud.html">
-                                Cloud Solutions
-                            </a>
-                        </li>
-
-                        <li>
-                            <a href="../services/cybersecurity.html">
-                                Cybersecurity
-                            </a>
-                        </li>
-
+                        <li><a href="../services/advisory.html">IT Advisory</a></li>
+                        <li><a href="../services/professional-services.html">Professional Services</a></li>
+                        <li><a href="../services/cloud.html">Cloud &amp; Azure</a></li>
+                        <li><a href="../services/cybersecurity.html">Cybersecurity</a></li>
+                        <li><a href="../services/communication-collaboration.html">Communication &amp; Collaboration</a></li>
+                        <li><a href="../services/digital-services.html">Digital Services</a></li>
+                        <li><a href="../services/ai-automation.html">AI &amp; Automation</a></li>
+                        <li><a href="../services/managed-it.html">Managed IT Services</a></li>
                     </ul>
 
                 </div>
@@ -214,17 +203,17 @@
             <div class="footer-bottom">
 
                 <p>
-                    © 2025 AMNIKON Technologies.
+                    © ${new Date().getFullYear()} AMNIKON Technologies.
                     All rights reserved.
                 </p>
 
                 <div class="footer-bottom-links">
 
-                    <a href="#">
+                    <a href="../legal/privacy.html">
                         Privacy Policy
                     </a>
 
-                    <a href="#">
+                    <a href="../legal/terms.html">
                         Terms of Service
                     </a>
 

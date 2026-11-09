@@ -124,6 +124,32 @@
     padding: 90px 0 45px;
 }
 
+/* Keep decorative lettering behind the CTA text and buttons. */
+.footer-cta > .container {position:relative;z-index:1;}
+
+.site-footer .footer-cta-actions .btn-primary {
+    background:#1768d4;
+    color:#fff;
+    border:1px solid #79bcff;
+    box-shadow:0 5px 16px rgba(0,0,0,.25);
+    opacity:1;
+    transition:background .2s ease,border-color .2s ease,box-shadow .2s ease,transform .2s ease;
+}
+@media(hover:hover) {
+    .site-footer .footer-cta-actions .btn-primary:hover {
+        background:#0d4fba;
+        border-color:#b8e4ff;
+        transform:translateY(-3px);
+        box-shadow:0 9px 24px rgba(21,101,192,.4),0 0 0 3px rgba(56,189,248,.15);
+    }
+}
+.site-footer .footer-cta-actions .btn-primary:focus-visible {outline:3px solid #7dd3fc;outline-offset:4px;}
+.site-footer .footer-cta-actions .btn-primary:active {background:#123f85;transform:translateY(1px);box-shadow:inset 0 2px 5px rgba(0,0,0,.25);}
+@media(prefers-reduced-motion:reduce) {
+    .site-footer .footer-cta-actions .btn-primary {transition:none;}
+    .site-footer .footer-cta-actions .btn-primary:hover,.site-footer .footer-cta-actions .btn-primary:active {transform:none;}
+}
+
 
 .footer-cta-content {
     display: flex;
@@ -1238,4 +1264,25 @@
         transform: scale(0.94);
     }
 
+}
+
+/* Compact desktop CTA: reserve room for the longer approved button labels. */
+.site-footer .footer-cta {padding-top:52px;padding-bottom:24px;}
+.site-footer .footer-cta-content {display:grid;grid-template-columns:minmax(0,1fr) auto;gap:32px;align-items:center;}
+.site-footer .footer-cta-content>div:first-child {flex:1;min-width:0;}
+.site-footer .footer-cta h2 {font-size:clamp(2.2rem,3.3vw,3.5rem);line-height:1.08;margin-bottom:18px;}
+.site-footer .footer-cta .eyebrow {margin-bottom:20px;}
+.site-footer .footer-cta p {font-size:.95rem;line-height:1.65;}
+.site-footer .footer-main {padding-top:32px;padding-bottom:28px;}
+.site-footer .footer-title-line {display:block;}
+@media(min-width:993px) {.site-footer .footer-title-line{white-space:nowrap;}}
+@media(min-width:993px) and (max-width:1279px) {
+  .site-footer .footer-cta-actions {flex-direction:column;align-items:stretch;gap:12px;}
+  .site-footer .footer-cta-actions .btn {white-space:nowrap;justify-content:center;}
+}
+@media(max-width:992px) {
+  .site-footer .footer-cta {padding-top:44px;padding-bottom:24px;}
+  .site-footer .footer-cta-content {grid-template-columns:minmax(0,1fr);gap:24px;}
+  .site-footer .footer-cta-content>div:first-child {flex:none;}
+  .site-footer .footer-cta h2 {font-size:clamp(1.8rem,4.5vw,2.8rem);}
 }

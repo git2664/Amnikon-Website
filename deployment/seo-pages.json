@@ -1,0 +1,142 @@
+{
+  "origin": "https://amnikontechnologies.com",
+  "home": "pages/home/index.html",
+  "image": "assets/logos/Amnikon-logo.png",
+  "imageWidth": 4500,
+  "imageHeight": 2801,
+  "pages": [
+    {
+      "file": "pages/home/index.html",
+      "title": "Managed IT, Cloud & Cybersecurity | AMNIKON",
+      "description": "AMNIKON helps businesses design, secure and manage IT environments with managed IT services, cloud solutions, cybersecurity and technology advisory.",
+      "type": "WebPage",
+      "indexable": true
+    },
+    {
+      "file": "pages/about/company.html",
+      "title": "About Our Company | AMNIKON Technologies",
+      "description": "Learn about AMNIKON Technologies and our approach to managed IT, cloud, cybersecurity and technology services for business.",
+      "type": "AboutPage",
+      "indexable": true
+    },
+    {
+      "file": "pages/about/team.html",
+      "title": "Our People & Culture | AMNIKON Technologies",
+      "description": "Explore AMNIKON’s people and culture: mission, collaboration, innovation and a commitment to understanding customers and creating business value.",
+      "type": "AboutPage",
+      "indexable": true
+    },
+    {
+      "file": "pages/services/services.html",
+      "title": "IT Services & Technology Solutions | AMNIKON",
+      "description": "Explore AMNIKON managed IT, cloud, cybersecurity, advisory, digital services, AI and automation, communication and collaboration, and professional services.",
+      "type": "CollectionPage",
+      "indexable": true
+    },
+    {
+      "file": "pages/services/managed-it.html",
+      "title": "Managed IT Services | AMNIKON Technologies",
+      "description": "Explore AMNIKON managed IT services for monitoring, maintenance, user support and reliable business technology operations.",
+      "type": "WebPage",
+      "indexable": true
+    },
+    {
+      "file": "pages/services/cloud.html",
+      "title": "Cloud Solutions & Azure Services | AMNIKON",
+      "description": "Explore AMNIKON cloud solutions for migration, infrastructure and Microsoft Azure, with a focus on scalability, security and business continuity.",
+      "type": "WebPage",
+      "indexable": true
+    },
+    {
+      "file": "pages/services/cybersecurity.html",
+      "title": "Cybersecurity Services | AMNIKON Technologies",
+      "description": "Explore AMNIKON cybersecurity services to help protect business systems, manage security risks and strengthen your approach to data protection.",
+      "type": "WebPage",
+      "indexable": true
+    },
+    {
+      "file": "pages/services/advisory.html",
+      "title": "Technology Advisory & IT Strategy | AMNIKON",
+      "description": "Plan your technology direction with AMNIKON advisory services, covering IT strategy, architecture and practical business technology decisions.",
+      "type": "WebPage",
+      "indexable": true
+    },
+    {
+      "file": "pages/industries/industries.html",
+      "title": "IT Solutions for Your Industry | AMNIKON",
+      "description": "IT solutions for healthcare, manufacturing, financial services, retail, legal consulting and engineering, shaped around your business needs.",
+      "type": "CollectionPage",
+      "indexable": true
+    },
+    {
+      "file": "pages/projects/index.html",
+      "title": "Cloud, Collaboration & Security Projects | AMNIKON",
+      "description": "Explore AMNIKON case studies in cloud identity, business collaboration, endpoint backup and secure remote access, with reported project outcomes.",
+      "type": "CollectionPage",
+      "indexable": true
+    },
+    {
+      "file": "pages/careers/careers.html",
+      "title": "Careers & Future Opportunities | AMNIKON",
+      "description": "Explore careers and culture at AMNIKON. There are no current vacancies; you can share your resume as an expression of interest for future opportunities.",
+      "type": "WebPage",
+      "indexable": true
+    },
+    {
+      "file": "pages/contact/contact.html",
+      "title": "General Enquiries | AMNIKON Technologies",
+      "description": "Contact AMNIKON Technologies with general questions about our company, information requests or an existing website enquiry.",
+      "type": "ContactPage",
+      "indexable": true
+    },
+    {
+      "file": "pages/support/support.html",
+      "title": "Request an IT Consultation | AMNIKON",
+      "description": "Request a consultation with AMNIKON to discuss managed IT, cloud, cybersecurity or a technology project. Tell us about your business needs.",
+      "type": "ContactPage",
+      "indexable": true
+    },
+    {
+      "file": "pages/legal/privacy.html",
+      "title": "Privacy Policy — Draft | AMNIKON",
+      "description": "Draft AMNIKON Technologies Privacy Policy, pending review and approval.",
+      "type": "WebPage",
+      "indexable": false
+    },
+    {
+      "file": "pages/legal/terms.html",
+      "title": "Terms of Service — Draft | AMNIKON",
+      "description": "Draft AMNIKON Technologies Terms of Service, pending review and approval.",
+      "type": "WebPage",
+      "indexable": false
+    },
+    {
+      "file": "pages/services/digital-services.html",
+      "title": "Digital Services | AMNIKON Technologies",
+      "description": "Build clearer customer and employee experiences with AMNIKON websites, portals, application modernization and business-system integration.",
+      "type": "WebPage",
+      "indexable": true
+    },
+    {
+      "file": "pages/services/ai-automation.html",
+      "title": "AI & Automation | AMNIKON Technologies",
+      "description": "Explore AMNIKON workflow automation, document intake and knowledge assistants, with contained pilots, exception handling and human review.",
+      "type": "WebPage",
+      "indexable": true
+    },
+    {
+      "file": "pages/services/communication-collaboration.html",
+      "title": "Communication & Collaboration | AMNIKON Technologies",
+      "description": "Organize business email, Teams and SharePoint with AMNIKON Microsoft 365 migration, workplace access, document management and user adoption.",
+      "type": "WebPage",
+      "indexable": true
+    },
+    {
+      "file": "pages/services/professional-services.html",
+      "title": "Professional Services | AMNIKON Technologies",
+      "description": "Deliver infrastructure upgrades, migrations and technical rollouts with AMNIKON professional services, acceptance checks and documented handover.",
+      "type": "WebPage",
+      "indexable": true
+    }
+  ]
+}

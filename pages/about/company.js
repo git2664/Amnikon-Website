@@ -10,54 +10,40 @@ document.querySelector(".stat-detail-panel");
 const details =
 document.querySelectorAll(".detail-content");
 
-cards.forEach(card=>{
-
-    card.addEventListener("mouseenter",()=>{
-
-        const id =
-        card.dataset.card;
-
-        showcase.classList.add("focusing");
-
-        panel.classList.add("show");
-
-        cards.forEach(c=>
-            c.classList.remove("active")
-        );
-
-        card.classList.add("active");
-
-        details.forEach(d=>
-            d.classList.remove("active")
-        );
-
-        document
-        .querySelector(
-            `[data-detail="${id}"]`
-        )
-        ?.classList.add("active");
-
-    });
-
+function showStat(card) {
+  showcase.classList.add('focusing'); panel.classList.add('show');
+  cards.forEach(c => {
+    const selected = c === card;
+    c.classList.toggle('active', selected);
+    c.setAttribute('aria-expanded', String(selected));
+  });
+  details.forEach(d => {
+    const selected = d.dataset.detail === card.dataset.card;
+    d.hidden = !selected; d.classList.toggle('active', selected);
+  });
+}
+function hideStats() {
+  showcase.classList.remove('focusing'); panel.classList.remove('show');
+  cards.forEach(c => { c.classList.remove('active'); c.setAttribute('aria-expanded', 'false'); });
+  details.forEach(d => { d.hidden = true; d.classList.remove('active'); });
+}
+cards.forEach(card => {
+  card.tabIndex = 0; card.setAttribute('role', 'button');
+  const detail = [...details].find(d => d.dataset.detail === card.dataset.card);
+  if (detail) { detail.id = 'stat-detail-' + card.dataset.card; card.setAttribute('aria-controls', detail.id); }
+  card.addEventListener('mouseenter', () => showStat(card));
+  card.addEventListener('focus', () => showStat(card));
+  card.addEventListener('click', () => showStat(card));
+  card.addEventListener('keydown', e => {
+    if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); showStat(card); }
+    if (e.key === 'Escape') { e.preventDefault(); hideStats(); }
+  });
 });
+const stats = document.querySelector('.about-stats');
+stats.addEventListener('mouseleave', () => { if (!stats.contains(document.activeElement)) hideStats(); });
+stats.addEventListener('focusout', e => { if (!stats.contains(e.relatedTarget)) hideStats(); });
+hideStats();
 
-document
-.querySelector(".about-stats")
-.addEventListener("mouseleave",()=>{
-
-    showcase.classList.remove("focusing");
-
-    panel.classList.remove("show");
-
-    cards.forEach(card=>
-        card.classList.remove("active")
-    );
-
-    details.forEach(detail=>
-        detail.classList.remove("active")
-    );
-
-});
 // Highlight
 
 const slides =

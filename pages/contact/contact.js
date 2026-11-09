@@ -11,14 +11,40 @@ document.addEventListener("DOMContentLoaded", () => {
         const submitBtn = document.getElementById("submitBtn");
         const successMessage = document.getElementById("formSuccess");
 
+        successMessage.hidden = true;
+
+        form.addEventListener("input", (e) => {
+            successMessage.hidden = true;
+            if (typeof e.target.setCustomValidity === "function") {
+                e.target.setCustomValidity("");
+            }
+        });
+
+        form.addEventListener("invalid", () => {
+            successMessage.hidden = true;
+        }, true);
+
         form.addEventListener("submit", async (e) => {
 
             e.preventDefault();
 
+            if (submitBtn.disabled) return;
+
+            successMessage.hidden = true;
+
+            // Native validation handles required fields and email format. Trim first
+            // so whitespace-only names/messages cannot pass the required check.
+            ["firstName", "lastName", "email", "company", "message"].forEach(id => {
+                const field = document.getElementById(id);
+                field.value = field.value.trim();
+            });
+
+            if (!form.reportValidity()) return;
+
             submitBtn.disabled = true;
             submitBtn.innerHTML = "Sending...";
 
-            successMessage.style.display = "none";
+            successMessage.hidden = true;
 
             const contactData = {
 
@@ -33,12 +59,16 @@ document.addEventListener("DOMContentLoaded", () => {
 
             try {
 
-                const response = await fetch("https://amnikontechnologies.com/api/api/contact", {
+                contactData.submissionId = await AmnikonApi.submissionId("contact", contactData);
+                const protectionHeaders = await AmnikonFormProtection.headers(form);
+
+                const response = await fetch(AmnikonApi.endpoint("contact"), {
 
                     method: "POST",
 
                     headers: {
-                        "Content-Type": "application/json"
+                        "Content-Type": "application/json",
+                        ...protectionHeaders
                     },
 
                     body: JSON.stringify(contactData)
@@ -47,15 +77,30 @@ document.addEventListener("DOMContentLoaded", () => {
 
                 const result = await response.json();
 
-                if (response.ok) {
+                if (response.ok && (result.success === true || result.Success === true)) {
 
-                    successMessage.style.display = "block";
+                    successMessage.hidden = false;
+                    successMessage.textContent = "Thank you! Your message has been received. We'll be in touch within 3 business days." +
+                        (result.submissionId ? " Reference: " + result.submissionId + "." : "");
 
                     form.reset();
+                    AmnikonApi.completeSubmission("contact");
 
                 } else {
 
-                    alert(result.message || "Something went wrong.");
+                    let fieldError = false;
+                    if (result.errors && typeof result.errors === "object") {
+                        Object.entries(result.errors).forEach(([key, messages]) => {
+                            const id = ["firstName", "lastName", "email", "company", "service", "message"]
+                                .find(name => name.toLowerCase() === key.toLowerCase());
+                            if (!id) return;
+                            const field = document.getElementById(id);
+                            field.setCustomValidity(Array.isArray(messages) ? messages.join(" ") : String(messages));
+                            fieldError = true;
+                        });
+                    }
+                    if (fieldError) form.reportValidity();
+                    else alert(AmnikonFormProtection.rejectionMessage(response, result, "We could not send your message. Please try again later."));
 
                 }
 
@@ -63,9 +108,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
                 console.error(error);
 
-                alert("Unable to connect to the server.");
+                alert(AmnikonFormProtection.errorMessage(error, "We could not confirm receipt. Your details have been kept. Please try again later."));
 
             } finally {
+                AmnikonFormProtection.reset(form);
 
                 submitBtn.disabled = false;
 

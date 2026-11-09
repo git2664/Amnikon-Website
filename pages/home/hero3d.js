@@ -1,8 +1,10 @@
+(() => {
 // =======================================
 // HERO 3D SCENE
 // =======================================
 
 const canvas = document.querySelector("#hero-canvas");
+if (!canvas || typeof THREE === "undefined") return;
 
 // Scene
 const scene = new THREE.Scene();
@@ -258,3 +260,4 @@ window.addEventListener(
     );
   }
 );
+})();

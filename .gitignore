@@ -1,0 +1,10 @@
+﻿work/
+bin/
+obj/
+**/appsettings*.json
+.env
+.env.*
+Uploads/
+SubmissionOutbox/
+ResumeOutbox/
+*.user

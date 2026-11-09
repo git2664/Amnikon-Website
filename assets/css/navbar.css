@@ -83,6 +83,10 @@ LOGO
 
   width: auto;
 
+  object-fit: contain;
+
+  image-rendering: auto;
+
   transition: 0.4s ease;
 }
 
@@ -119,7 +123,7 @@ nav {
   position: relative;
 }
 
-.nav-menu > li > a {
+.nav-menu > li > :is(a, .nav-disclosure) {
   display: flex;
 
   align-items: center;
@@ -139,13 +143,13 @@ nav {
   transition: 0.3s;
 }
 
-.nav-menu > li > a:hover {
+.nav-menu > li > :is(a, .nav-disclosure):hover {
   color: #2563eb;
 }
 
 /* underline */
 
-.nav-menu > li > a::before {
+.nav-menu > li > :is(a, .nav-disclosure)::before {
   content: "";
 
   position: absolute;
@@ -164,7 +168,7 @@ nav {
   transition: 0.3s;
 }
 
-.nav-menu > li > a:hover::before {
+.nav-menu > li > :is(a, .nav-disclosure):hover::before {
   width: 60%;
 }
 
@@ -172,7 +176,7 @@ nav {
 DROPDOWN ARROW
 ========================= */
 
-.has-dropdown > a::after {
+.has-dropdown > .nav-disclosure::after {
   content: "";
 
   width: 7px;
@@ -186,7 +190,7 @@ DROPDOWN ARROW
   transition: 0.3s;
 }
 
-.has-dropdown:hover > a::after {
+.has-dropdown.open > .nav-disclosure::after {
   transform: rotate(-135deg);
 }
 
@@ -220,7 +224,7 @@ DROPDOWN
   list-style: none;
 }
 
-.has-dropdown:hover .dropdown-menu {
+.has-dropdown.open .dropdown-menu {
   opacity: 1;
 
   visibility: visible;
@@ -318,17 +322,17 @@ ACTIONS
    SCROLLED NAVBAR TEXT
 ========================== */
 
-.navbar.scrolled .nav-menu > li > a {
+.navbar.scrolled .nav-menu > li > :is(a, .nav-disclosure) {
   color: #ffffff;
 }
 
-.navbar.scrolled .nav-menu > li > a:hover {
+.navbar.scrolled .nav-menu > li > :is(a, .nav-disclosure):hover {
   color: #38bdf8;
 }
 
 /* Dropdown arrows */
 
-.navbar.scrolled .has-dropdown > a::after {
+.navbar.scrolled .has-dropdown > .nav-disclosure::after {
   border-color: #ffffff;
 }
 
@@ -468,7 +472,7 @@ ACTIONS
     width: 100%;
   }
 
-  .nav-menu li a {
+  .nav-menu li :is(a, .nav-disclosure) {
     width: 100%;
 
     display: flex;
@@ -578,7 +582,7 @@ ACTIONS
     background: #0b1120;
   }
 
-  .navbar.scrolled .nav-menu li a {
+  .navbar.scrolled .nav-menu li :is(a, .nav-disclosure) {
     color: #ffffff;
 
     border-bottom: 1px solid rgba(255, 255, 255, 0.08);
@@ -596,7 +600,7 @@ ACTIONS
     color: #38bdf8;
   }
 
-  .navbar.scrolled .has-dropdown > a::after {
+  .navbar.scrolled .has-dropdown > .nav-disclosure::after {
     border-color: #ffffff;
   }
 
@@ -659,4 +663,120 @@ ACTIONS
   .mobile-buttons {
     display: none !important;
   }
+}
+
+.nav-disclosure { border: 0; background: transparent; font-family: inherit; cursor: pointer; text-align: left; }
+.nav-hamburger { display: none; min-width: 44px; min-height: 44px; align-items: center; justify-content: center; }
+@media (max-width: 992px) {
+  .nav-hamburger { display: flex; }
+  .nav-menu.mobile-open { max-height: calc(100dvh - 110px); overflow-y: auto; }
+}
+@media (max-width: 992px) {
+  .nav-menu.mobile-open { overflow-x: hidden; }
+  .nav-menu .dropdown-menu { min-width: 0; box-sizing: border-box; }
+}
+
+/* Keep the distinct enquiry/consultation labels inside the existing desktop breakpoint. */
+@media (min-width: 993px) and (max-width: 1250px) {
+  .nav-container { padding: 0 20px; }
+  .nav-logo img { height: 66px; }
+  .nav-menu { gap: 6px; }
+  .nav-menu > li > :is(a, .nav-disclosure) { padding: 12px 9px; font-size: .88rem; }
+  .nav-actions { gap: 8px; }
+  .nav-actions .btn { padding: 11px 16px; font-size: .88rem; white-space: nowrap; }
+}
+
+/* Service tray follows the same reading order as the numbered service tiles. */
+#nav-services .services-overview a {font-weight:700;justify-content:space-between;border-bottom:1px solid rgba(15,23,42,.1);border-radius:8px 8px 0 0;}
+#nav-services li:not(.services-overview) a {display:flex;align-items:center;gap:12px;line-height:1.4;}
+#nav-services .nav-service-number {display:grid;place-items:center;flex:0 0 30px;height:30px;border-radius:8px;background:rgba(37,99,235,.08);color:#1565c0;font-size:.72rem;font-weight:700;}
+@media(min-width:993px) {
+  #nav-services {display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:4px 8px;width:min(640px,calc(100vw - 64px));padding:14px;left:50%;transform:translate(-50%,10px);max-height:calc(100dvh - 130px);overflow-y:auto;}
+  #nav-services .services-overview {grid-column:1 / -1;margin-bottom:4px;}
+  #nav-services li a {height:100%;min-height:64px;padding:12px;font-size:.9rem;}
+  #nav-services .services-overview a {min-height:46px;display:flex;}
+  #nav-services li a:hover {padding-left:12px;}
+  .has-dropdown.open #nav-services {transform:translate(-50%,0);}
+}
+@media(max-width:992px) {
+  #nav-services {padding-left:10px;}
+  #nav-services li:not(.services-overview) a {padding:12px 0;}
+  #nav-services .services-overview a {padding:12px 0;}
+  .navbar.scrolled #nav-services .nav-service-number {color:#7dd3fc;background:rgba(56,189,248,.12);}
+}
+@media(min-width:993px) and (max-width:1250px) {
+  #nav-services {left:0;transform:translateY(10px);}
+  .has-dropdown.open #nav-services {transform:translateY(0);}
+}
+
+/* Give the consultation action a distinct, tactile button treatment. */
+.navbar .btn-support {
+  position:relative;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  min-height:46px;
+  border:1px solid #42648d;
+  color:#fff;
+  background:linear-gradient(135deg,#15263f,#243f64);
+  box-shadow:0 4px 12px rgba(15,35,62,.2),inset 0 1px 0 rgba(255,255,255,.12);
+  font-weight:700;
+  cursor:pointer;
+  transition:background .2s ease,border-color .2s ease,box-shadow .2s ease,transform .2s ease;
+}
+.navbar.scrolled .btn-support {
+  color:#fff;
+  border-color:rgba(111,204,244,.65);
+  background:linear-gradient(135deg,#122a46,#204c70);
+  box-shadow:0 4px 14px rgba(0,0,0,.2),inset 0 1px 0 rgba(255,255,255,.1);
+}
+@media(hover:hover) {
+  .navbar .btn-support:hover,.navbar.scrolled .btn-support:hover {
+    color:#fff;
+    border-color:#58d5f2;
+    background:linear-gradient(135deg,#123e6d,#17618d);
+    transform:translateY(-2px);
+    box-shadow:0 8px 22px rgba(21,101,192,.3),0 0 0 3px rgba(56,189,248,.12);
+  }
+}
+.navbar .btn-support:focus-visible {
+  outline:3px solid #1683d4;
+  outline-offset:4px;
+}
+.navbar.scrolled .btn-support:focus-visible {outline-color:#7dd3fc;}
+.navbar .btn-support:active,.navbar.scrolled .btn-support:active {
+  transform:translateY(1px);
+  background:#123756;
+  box-shadow:inset 0 2px 5px rgba(0,0,0,.3);
+}
+.navbar .nav-menu .mobile-buttons .btn-support,
+.navbar.scrolled .nav-menu .mobile-buttons .btn-support {
+  color:#fff;
+  border:1px solid #5792b8;
+  padding:14px 18px;
+}
+@media(prefers-reduced-motion:reduce) {
+  .navbar .btn-support {transition:none;}
+  .navbar .btn-support:hover,.navbar .btn-support:active {transform:none;}
+}
+
+/* Opaque enquiry action with clear interactive feedback on both header themes. */
+.navbar .btn-primary {
+  background:#1768d4;
+  color:#fff;
+  border:1px solid #79bcff;
+  opacity:1;
+  box-shadow:0 5px 16px rgba(21,101,192,.25);
+  transition:background .2s ease,border-color .2s ease,box-shadow .2s ease,transform .2s ease;
+}
+@media(hover:hover) {
+  .navbar .btn-primary:hover {background:#0d4fba;color:#fff;border-color:#b8e4ff;transform:translateY(-2px);box-shadow:0 9px 24px rgba(21,101,192,.4),0 0 0 3px rgba(56,189,248,.15);}
+}
+.navbar .btn-primary:focus-visible {outline:3px solid #1683d4;outline-offset:4px;}
+.navbar.scrolled .btn-primary:focus-visible {outline-color:#7dd3fc;}
+.navbar .btn-primary:active {background:#123f85;transform:translateY(1px);box-shadow:inset 0 2px 5px rgba(0,0,0,.25);}
+.navbar .nav-menu .mobile-buttons .btn-primary,.navbar.scrolled .nav-menu .mobile-buttons .btn-primary {color:#fff;border:1px solid #79bcff;}
+@media(prefers-reduced-motion:reduce) {
+  .navbar .btn-primary {transition:none;}
+  .navbar .btn-primary:hover,.navbar .btn-primary:active {transform:none;}
 }

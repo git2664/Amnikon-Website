@@ -1,256 +1,84 @@
-/* ===========================================================
-   AMNIKON PROJECTS
-   Netflix Style Slider + Modal (fixed)
-=========================================================== */
-
-document.addEventListener("DOMContentLoaded", () => {
-  /*=========================================================
-        ELEMENTS
-    =========================================================*/
-  const slider = document.querySelector(".project-slider");
-  const leftBtn = document.querySelector(".slider-btn.left");
-  const rightBtn = document.querySelector(".slider-btn.right");
-  const cards = document.querySelectorAll(".project-card");
-  const modal = document.querySelector(".project-modal");
-  const modalImage = document.getElementById("modal-image");
-  const modalTitle = document.getElementById("modal-title");
-  const modalDescription = document.getElementById("modal-description");
-  const modalTech = document.getElementById("modal-tech");
-  const demoLink = document.getElementById("demo-link");
-  const githubLink = document.getElementById("github-link");
-  const closeModal = document.querySelector(".close-modal");
-
-  if (!slider || !modal) {
-    console.warn("Slider or modal element not found — check your selectors.");
-    return;
+/* Horizontal case-study browsing and the shared accessible project dialog. */
+document.addEventListener('DOMContentLoaded', () => {
+  const track = document.querySelector('.case-grid');
+  const controls = document.querySelector('.case-controls');
+  if (track && controls) {
+    const cards = [...track.querySelectorAll('.case-card')];
+    const previous = controls.querySelector('.case-previous');
+    const next = controls.querySelector('.case-next');
+    const status = controls.querySelector('.case-position');
+    const motion = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const step = () => cards.length > 1 ? cards[1].offsetLeft - cards[0].offsetLeft : track.clientWidth;
+    function move(left) { track.scrollTo({left, behavior:motion.matches ? 'auto' : 'smooth'}); }
+    function update() {
+      const max = Math.max(0, track.scrollWidth - track.clientWidth);
+      previous.disabled = track.scrollLeft <= 2;
+      next.disabled = track.scrollLeft >= max - 2;
+      const first = Math.min(cards.length, Math.round(track.scrollLeft / step()) + 1);
+      const visible = Math.max(1, Math.round(track.clientWidth / step()));
+      const last = Math.min(cards.length, first + visible - 1);
+      status.textContent = (first === last ? first : first + '–' + last) + ' of ' + cards.length;
+    }
+    controls.hidden = false;
+    previous.addEventListener('click', () => move(track.scrollLeft - step()));
+    next.addEventListener('click', () => move(track.scrollLeft + step()));
+    track.addEventListener('scroll', update, {passive:true});
+    track.addEventListener('keydown', event => {
+      if (event.target !== track || event.altKey || event.ctrlKey || event.metaKey) return;
+      if (!['ArrowLeft','ArrowRight','Home','End'].includes(event.key)) return;
+      event.preventDefault();
+      move(event.key === 'Home' ? 0 : event.key === 'End' ? track.scrollWidth : track.scrollLeft + (event.key === 'ArrowRight' ? step() : -step()));
+    });
+    let drag = null;
+    track.addEventListener('pointerdown', event => {
+      if (event.pointerType !== 'mouse' || event.button !== 0 || event.target.closest('button,a')) return;
+      drag = {id:event.pointerId,x:event.clientX,left:track.scrollLeft,active:false};
+    });
+    track.addEventListener('pointermove', event => {
+      if (!drag || event.pointerId !== drag.id) return;
+      if (!drag.active && Math.abs(event.clientX - drag.x) < 6) return;
+      if (!drag.active) {drag.active = true;track.classList.add('is-dragging');track.setPointerCapture(event.pointerId);}
+      event.preventDefault();
+      track.scrollLeft = drag.left - (event.clientX - drag.x);
+    });
+    function finishDrag() {
+      if (!drag) return;
+      if (track.hasPointerCapture(drag.id)) track.releasePointerCapture(drag.id);
+      drag = null;track.classList.remove('is-dragging');update();
+    }
+    track.addEventListener('pointerup', finishDrag);
+    track.addEventListener('pointercancel', finishDrag);
+    track.addEventListener('lostpointercapture', () => {drag = null;track.classList.remove('is-dragging');});
+    track.addEventListener('pointerleave', () => {if (drag && !drag.active) drag = null;});
+    track.querySelectorAll('img').forEach(image => {image.draggable = false;});
+    window.addEventListener('resize', update);
+    if ('ResizeObserver' in window) new ResizeObserver(update).observe(track);
+    update();
   }
-
-  const scrollAmount = 200;
-  let activeCard = null;
-  let isDragging = false;
-  let startX = 0;
-  let startScroll = 0;
-
-  /*=========================================================
-        SLIDER SCROLL
-    =========================================================*/
-  function scrollSlider(distance) {
-    slider.scrollBy({ left: distance, behavior: "smooth" });
-  }
-
-  leftBtn?.addEventListener("click", () => scrollSlider(-scrollAmount));
-  rightBtn?.addEventListener("click", () => scrollSlider(scrollAmount));
-
-  /*=========================================================
-        SLIDER BUTTON STATE (single source of truth)
-    =========================================================*/
-  function updateSliderButtons() {
-    if (!leftBtn || !rightBtn) return;
-
-    const maxScroll = slider.scrollWidth - slider.clientWidth;
-    const atStart = slider.scrollLeft <= 5;
-    const atEnd = slider.scrollLeft >= maxScroll - 5;
-
-    leftBtn.disabled = atStart;
-    leftBtn.style.opacity = atStart ? ".35" : "1";
-    leftBtn.style.pointerEvents = atStart ? "none" : "auto";
-
-    rightBtn.disabled = atEnd;
-    rightBtn.style.opacity = atEnd ? ".35" : "1";
-    rightBtn.style.pointerEvents = atEnd ? "none" : "auto";
-  }
-
-  slider.addEventListener("scroll", updateSliderButtons);
-  window.addEventListener("resize", updateSliderButtons);
-  updateSliderButtons();
-
-  /*=========================================================
-        MOUSE WHEEL (horizontal scroll)
-    =========================================================*/
-slider.addEventListener(
-  "wheel",
-  (e) => {
-    e.preventDefault();
-    slider.scrollLeft += e.deltaY * 3; // 40% speed
-  },
-  { passive: false }
-);
-
-  /*=========================================================
-        DRAG SUPPORT
-    =========================================================*/
-  slider.addEventListener("mousedown", (e) => {
-    isDragging = true;
-    slider.classList.add("dragging");
-    startX = e.pageX;
-    startScroll = slider.scrollLeft;
-  });
-
-  window.addEventListener("mouseup", () => {
-    isDragging = false;
-    slider.classList.remove("dragging");
-  });
-
-  slider.addEventListener("mouseleave", () => {
-    isDragging = false;
-    slider.classList.remove("dragging");
-  });
-
-  slider.addEventListener("mousemove", (e) => {
-    if (!isDragging) return;
-    e.preventDefault();
-    const distance = (e.pageX - startX) * 2;
-    slider.scrollLeft = startScroll - distance;
-  });
-
-  /*=========================================================
-        CARD HOVER
-    =========================================================*/
-  cards.forEach((card) => {
-    card.addEventListener("mouseenter", () => {
-      if (card.classList.contains("active")) return;
-      gsap.to(card, { scale: 1.04, duration: 0.25, overwrite: true });
-    });
-
-    card.addEventListener("mouseleave", () => {
-      if (card.classList.contains("active")) return;
-      gsap.to(card, { scale: 1, duration: 0.25, overwrite: true });
-    });
-  });
-
-  /*=========================================================
-        OPEN MODAL
-    =========================================================*/
-  function openProject(btn) {
-    activeCard = btn.closest(".project-card");
-    if (!activeCard) return;
-
-    slider.classList.add("active");
-
-    cards.forEach((card) => {
-      card.classList.remove("active");
-      gsap.set(card, { clearProps: "transform" });
-    });
-
-    activeCard.classList.add("active");
-
-    const sliderWidth = slider.clientWidth;
-    const cardWidth = activeCard.offsetWidth;
-    const cardLeft = activeCard.offsetLeft;
-
-    slider.scrollTo({
-      left: cardLeft - sliderWidth / 2 + cardWidth / 2,
-      behavior: "smooth",
-    });
-
-    // Guarded dataset reads — won't throw or write "undefined" if a card is missing data
-    modalTitle.textContent = btn.dataset.title || "";
-    modalImage.src = btn.dataset.image || "";
-    modalImage.alt = btn.dataset.title || "Project image";
-    modalDescription.textContent = btn.dataset.description || "";
-    demoLink.href = btn.dataset.demo || "#";
-    githubLink.href = btn.dataset.github || "#";
-
-    modalTech.innerHTML = "";
-    (btn.dataset.technologies || "")
-      .split(",")
-      .map((t) => t.trim())
-      .filter(Boolean)
-      .forEach((tech) => {
-        const badge = document.createElement("span");
-        badge.textContent = tech;
-        modalTech.appendChild(badge);
+  const modal = document.querySelector('.project-modal');
+  const close = document.querySelector('.close-modal');
+  if (!modal || !window.AmnikonUI) return;
+  const dialog = window.AmnikonUI.modal(modal, {openClass:'active',initialFocus:close});
+  document.querySelectorAll('.project-btn').forEach(button => {
+    button.addEventListener('click', () => {
+      const data = button.dataset;
+      document.getElementById('modal-title').textContent = data.title || '';
+      const image = document.getElementById('modal-image');
+      image.src = data.image || '';
+      image.alt = data.title || 'Project illustration';
+      document.getElementById('modal-description').textContent = data.description || '';
+      ['challenge','solution','outcome','source'].forEach(key => {
+        document.getElementById('modal-' + key).textContent = data[key] || '';
       });
-
-    setTimeout(() => {
-      modal.classList.add("active");
-      document.body.style.overflow = "hidden";
-
-      gsap.fromTo(
-        ".modal-content",
-        { opacity: 0, y: 40, scale: 0.95 },
-        { opacity: 1, y: 0, scale: 1, duration: 0.45, ease: "power3.out" }
-      );
-    }, 350);
-  }
-
-  /*=========================================================
-        CARD EVENTS (click + keyboard)
-    =========================================================*/
-  document.querySelectorAll(".project-btn").forEach((btn) => {
-    btn.addEventListener("click", () => {
-      openProject(btn);
-      btn.blur();
-    });
-
-    btn.addEventListener("keydown", (e) => {
-      if (e.key === "Enter" || e.key === " ") {
-        e.preventDefault();
-        openProject(btn);
-      }
-    });
-
-    // Accessibility label
-    if (btn.dataset.title) {
-      btn.setAttribute("aria-label", btn.dataset.title);
-    }
-  });
-
-  /*=========================================================
-        CLOSE MODAL (single definition)
-    =========================================================*/
-  function closeProjectModal() {
-    gsap.to(".modal-content", {
-      opacity: 0,
-      y: 40,
-      scale: 0.95,
-      duration: 0.25,
-      ease: "power2.in",
-      onComplete: () => {
-        modal.classList.remove("active");
-      },
-    });
-
-    document.body.style.overflow = "";
-    slider.classList.remove("active");
-
-    cards.forEach((card) => {
-      card.classList.remove("active");
-      gsap.to(card, {
-        scale: 1,
-        duration: 0.25,
-        overwrite: true,
-        clearProps: "transform",
+      const tech = document.getElementById('modal-tech');
+      tech.replaceChildren();
+      (data.technologies || '').split(',').map(t => t.trim()).filter(Boolean).forEach(text => {
+        const badge = document.createElement('span');
+        badge.textContent = text;
+        tech.appendChild(badge);
       });
+      dialog.open(button);
     });
-
-    activeCard = null;
-  }
-
-  closeModal?.addEventListener("click", closeProjectModal);
-
-  modal.addEventListener("click", (e) => {
-    if (e.target === modal) closeProjectModal();
   });
-
-  document.addEventListener("keydown", (e) => {
-    if (e.key === "Escape" && modal.classList.contains("active")) {
-      closeProjectModal();
-    }
-
-    // Arrow-key slider navigation, only when modal is closed
-    if (!modal.classList.contains("active")) {
-      if (e.key === "ArrowRight") scrollSlider(scrollAmount);
-      if (e.key === "ArrowLeft") scrollSlider(-scrollAmount);
-    }
-  });
-
-  /*=========================================================
-        IMAGE PRELOAD
-    =========================================================*/
-  document.querySelectorAll(".project-btn").forEach((btn) => {
-    if (!btn.dataset.image) return;
-    const image = new Image();
-    image.src = btn.dataset.image;
-  });
+  close?.addEventListener('click', dialog.close);
 });

@@ -1,8 +1,67 @@
+/* Shared modal lifecycle: one active dialog, inert background, focus containment and restoration. */
+window.AmnikonUI = {
+  activeModal: null,
+  modal(element, { openClass = 'open', initialFocus, onClose } = {}) {
+    // Keep dialogs outside page sections so the entire background can become inert.
+    document.body.appendChild(element);
+    element.hidden = true;
+    element.setAttribute('role', 'dialog');
+    element.setAttribute('aria-modal', 'true');
+    element.tabIndex = -1;
+    let opener, previousOverflow, background = [];
+    const focusable = () => [...element.querySelectorAll('a[href], button, input, select, textarea, video[controls], [tabindex]')]
+      .filter(node => node.tabIndex >= 0 && !node.disabled && !node.closest('[hidden], [inert]') && node.getClientRects().length);
+    function close() {
+      if (element.hidden) return;
+      element.hidden = true;
+      element.classList.remove(openClass);
+      background.forEach(([node, wasInert]) => { node.inert = wasInert; });
+      background = [];
+      document.body.style.overflow = previousOverflow;
+      window.AmnikonUI.activeModal = null;
+      onClose?.();
+      if (opener?.isConnected && !opener.closest('[inert], [hidden]')) opener.focus();
+    }
+    function open(trigger = document.activeElement) {
+      if (!element.hidden) return;
+      window.AmnikonUI.activeModal?.close();
+      opener = trigger;
+      previousOverflow = document.body.style.overflow;
+      element.hidden = false;
+      element.classList.add(openClass);
+      background = [...document.body.children].filter(node => node !== element).map(node => [node, node.inert]);
+      background.forEach(([node]) => { node.inert = true; });
+      document.body.style.overflow = 'hidden';
+      window.AmnikonUI.activeModal = { close };
+      (initialFocus || focusable()[0] || element).focus();
+    }
+    element.addEventListener('keydown', e => {
+      if (e.key === 'Escape') { e.preventDefault(); e.stopPropagation(); close(); }
+      if (e.key !== 'Tab') return;
+      const nodes = focusable(), first = nodes[0], last = nodes[nodes.length - 1];
+      if (!first) { e.preventDefault(); element.focus(); }
+      else if (e.shiftKey && (document.activeElement === first || document.activeElement === element)) { e.preventDefault(); last.focus(); }
+      else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+    });
+    element.addEventListener('click', e => { if (e.target === element) close(); });
+    return { open, close };
+  }
+};
+
 /* ============================================================
    AMNIKON — Global JavaScript
    ============================================================ */
 
 document.addEventListener('DOMContentLoaded', () => {
+  const main = document.querySelector('main');
+  if (main) {
+    main.id ||= 'main-content'; main.tabIndex = -1;
+    const skip = document.createElement('a');
+    skip.href = '#' + main.id; skip.className = 'skip-link'; skip.textContent = 'Skip to main content';
+    skip.addEventListener('click', () => main.focus());
+    document.body.prepend(skip);
+  }
+
 
   /* ──────────────────────────────────────────────
      1. NAVBAR — Scroll shrink + hamburger + dropdowns
@@ -18,31 +77,56 @@ document.addEventListener('DOMContentLoaded', () => {
     }, { passive: true });
   }
 
-  if (hamburger) {
-    hamburger.addEventListener('click', () => {
-      hamburger.classList.toggle('open');
-      navMenu?.classList.toggle('mobile-open');
-      navActions?.classList.toggle('mobile-open');
-    });
-
-    // Mobile dropdown toggle
-    document.querySelectorAll('.nav-menu li.has-dropdown > a').forEach(link => {
-      link.addEventListener('click', e => {
-        if (window.innerWidth <= 900) {
-          e.preventDefault();
-          link.closest('li').classList.toggle('open');
-        }
+  if (hamburger && navMenu) {
+    const mobile = window.matchMedia('(max-width: 992px)');
+    const dropdowns = [...navbar.querySelectorAll('.has-dropdown')];
+    function setDropdown(item, open) {
+      item.classList.toggle('open', open);
+      item.querySelector('.nav-disclosure').setAttribute('aria-expanded', String(open));
+      item.querySelector('.dropdown-menu').hidden = !open;
+    }
+    function closeDropdowns() { dropdowns.forEach(item => setDropdown(item, false)); }
+    function setMenu(open, restore = false) {
+      hamburger.classList.toggle('open', open);
+      hamburger.setAttribute('aria-expanded', String(open));
+      hamburger.setAttribute('aria-label', open ? 'Close navigation' : 'Open navigation');
+      navMenu.classList.toggle('mobile-open', open);
+      navMenu.hidden = mobile.matches && !open;
+      if (!open) closeDropdowns();
+      if (restore) hamburger.focus();
+    }
+    hamburger.addEventListener('click', () => setMenu(hamburger.getAttribute('aria-expanded') !== 'true'));
+    dropdowns.forEach(item => {
+      const button = item.querySelector('.nav-disclosure');
+      button.addEventListener('click', () => {
+        const open = button.getAttribute('aria-expanded') !== 'true';
+        closeDropdowns(); setDropdown(item, open);
+      });
+      item.addEventListener('mouseenter', () => {
+        if (!mobile.matches) { closeDropdowns(); setDropdown(item, true); }
+      });
+      item.addEventListener('mouseleave', () => {
+        if (!mobile.matches && !item.contains(document.activeElement)) setDropdown(item, false);
       });
     });
-
-    // Close on outside click
-    document.addEventListener('click', e => {
-      if (!e.target.closest('.navbar')) {
-        hamburger.classList.remove('open');
-        navMenu?.classList.remove('mobile-open');
-        navActions?.classList.remove('mobile-open');
-      }
+    navbar.addEventListener('keydown', e => {
+      if (e.key !== 'Escape') return;
+      const item = e.target.closest('.has-dropdown.open');
+      if (item) { setDropdown(item, false); item.querySelector('button').focus(); }
+      else if (mobile.matches && hamburger.getAttribute('aria-expanded') === 'true') setMenu(false, true);
+      else closeDropdowns();
+      e.preventDefault();
     });
+    navbar.addEventListener('focusout', e => {
+      dropdowns.forEach(item => { if (!item.contains(e.relatedTarget)) setDropdown(item, false); });
+      if (!navbar.contains(e.relatedTarget)) setMenu(false);
+    });
+    document.addEventListener('click', e => { if (!navbar.contains(e.target)) setMenu(false); });
+    mobile.addEventListener('change', () => {
+      const focusHidden = mobile.matches && navMenu.contains(document.activeElement);
+      setMenu(false, focusHidden);
+    });
+    setMenu(false);
   }
 
   /* ──────────────────────────────────────────────
@@ -53,6 +137,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const href = link.getAttribute('href') || '';
     if (href && currentPath.includes(href.replace('../', '').replace('.html', ''))) {
       link.classList.add('active');
+      link.setAttribute('aria-current', 'page');
     }
   });
 
@@ -111,24 +196,17 @@ document.addEventListener('DOMContentLoaded', () => {
   const modalVideo    = document.getElementById('modalVideo');
   const closeModal    = document.querySelector('.modal-close');
 
-  function openModal() {
-    if (!videoModal) return;
-    videoModal.classList.add('open');
-    document.body.style.overflow = 'hidden';
-    if (modalVideo) modalVideo.play();
+  if (videoModal) {
+    const videoDialog = window.AmnikonUI.modal(videoModal, {
+      openClass: 'open', initialFocus: closeModal,
+      onClose: () => { if (modalVideo) { modalVideo.pause(); modalVideo.currentTime = 0; } }
+    });
+    openVideoBtn?.addEventListener('click', () => {
+      videoDialog.open(openVideoBtn);
+      modalVideo?.play()?.catch(() => {});
+    });
+    closeModal?.addEventListener('click', videoDialog.close);
   }
-
-  function closeModalFn() {
-    if (!videoModal) return;
-    videoModal.classList.remove('open');
-    document.body.style.overflow = '';
-    if (modalVideo) { modalVideo.pause(); modalVideo.currentTime = 0; }
-  }
-
-  openVideoBtn?.addEventListener('click', e => { e.preventDefault(); openModal(); });
-  closeModal?.addEventListener('click', closeModalFn);
-  videoModal?.addEventListener('click', e => { if (e.target === videoModal) closeModalFn(); });
-  document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModalFn(); });
 
   /* ──────────────────────────────────────────────
      6. CHATBOT
@@ -149,11 +227,11 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   const botReplies = [
-    "Thanks for reaching out! Our team will get back to you shortly.",
-    "Great question! You can contact us at sales@amnikon.com for more details.",
-    "I'd be happy to help. Could you tell me more about what you're looking for?",
+    "For a reply from our team, choose Request a Consultation above and send an enquiry.",
+    "You can email info@amnikontechnologies.com to discuss your requirements.",
+    "Our Request a Consultation form lets you tell us about your business and what you need.",
     "We specialize in Managed IT, Cybersecurity, and Cloud Solutions. Which interests you?",
-    "You can schedule a  consultation at your convenience — just click 'Meeting' above!"
+    "Choose Request a Consultation above to discuss a project or ask about our services."
   ];
 
   let replyIndex = 0;
@@ -169,9 +247,20 @@ document.addEventListener('DOMContentLoaded', () => {
     }, 800);
   }
 
-  chatToggle?.addEventListener('click', () => {
-    chatToggle.classList.toggle('open');
-    chatWindow?.classList.toggle('open');
+  function setChat(open, restore = false) {
+    if (!chatWindow || !chatToggle) return;
+    chatWindow.hidden = !open;
+    chatWindow.classList.toggle('open', open);
+    chatToggle.classList.toggle('open', open);
+    chatToggle.setAttribute('aria-expanded', String(open));
+    chatToggle.setAttribute('aria-label', open ? 'Close chat' : 'Open chat');
+    if (open) chatInput?.focus();
+    else if (restore) chatToggle.focus();
+  }
+  chatToggle?.addEventListener('click', () => setChat(chatWindow.hidden));
+  document.getElementById('chatbot-close')?.addEventListener('click', () => setChat(false, true));
+  chatWindow?.addEventListener('keydown', e => {
+    if (e.key === 'Escape') { e.preventDefault(); setChat(false, true); }
   });
 
   chatSend?.addEventListener('click', sendMessage);
@@ -184,15 +273,38 @@ document.addEventListener('DOMContentLoaded', () => {
   const valuePanels = document.querySelectorAll('.value-panel');
 
   if (valueItems.length) {
-    valueItems.forEach(item => {
-      item.addEventListener('click', () => {
-        const target = item.dataset.value;
-        valueItems.forEach(i => i.classList.remove('active'));
-        valuePanels.forEach(p => p.classList.remove('active'));
-        item.classList.add('active');
-        document.getElementById('panel-' + target)?.classList.add('active');
+    valueItems[0].parentElement.setAttribute('role', 'tablist');
+    valueItems[0].parentElement.setAttribute('aria-label', 'Our core values');
+    function selectValue(item) {
+      valueItems.forEach(tab => {
+        const selected = tab === item;
+        tab.classList.toggle('active', selected);
+        tab.setAttribute('aria-selected', String(selected));
+        tab.tabIndex = selected ? 0 : -1;
+        const panel = document.getElementById('panel-' + tab.dataset.value);
+        if (panel) { panel.hidden = !selected; panel.classList.toggle('active', selected); }
+      });
+    }
+    valueItems.forEach((item, index) => {
+      item.id = 'value-' + item.dataset.value;
+      item.setAttribute('role', 'tab');
+      item.setAttribute('aria-controls', 'panel-' + item.dataset.value);
+      const panel = document.getElementById('panel-' + item.dataset.value);
+      if (panel) {
+        panel.setAttribute('role', 'tabpanel'); panel.setAttribute('aria-labelledby', item.id); panel.tabIndex = 0;
+      }
+      item.addEventListener('click', () => selectValue(item));
+      item.addEventListener('keydown', e => {
+        let next;
+        if (e.key === 'ArrowRight') next = (index + 1) % valueItems.length;
+        if (e.key === 'ArrowLeft') next = (index + valueItems.length - 1) % valueItems.length;
+        if (e.key === 'Home') next = 0;
+        if (e.key === 'End') next = valueItems.length - 1;
+        if (e.key === 'Enter' || e.key === ' ') next = index;
+        if (next !== undefined) { e.preventDefault(); selectValue(valueItems[next]); valueItems[next].focus(); }
       });
     });
+    selectValue([...valueItems].find(item => item.classList.contains('active')) || valueItems[0]);
   }
 
   /* ──────────────────────────────────────────────

@@ -76,7 +76,7 @@
 .hero-label {
   display: block;
 
-  color: #94a3b8;
+  color: #ffffff;
 
   font-size: 0.85rem;
 
@@ -470,7 +470,7 @@
 
     margin-bottom:20px;
 
-    color:#429ceb;
+    color: #ffffff;
 
     letter-spacing:3px;
 
@@ -497,7 +497,7 @@
 
 .section-label{
 
-    color:#429ceb;
+    color: #ffffff;
 
     letter-spacing:3px;
 
@@ -733,7 +733,7 @@ RESUME SECTION
 
 .resume-label{
 
-    color:#429ceb;
+    color: #ffffff;
 
     letter-spacing:4px;
 
@@ -1481,6 +1481,21 @@ RESUME SECTION
 /* ==========================================================
    TABLET RESPONSIVE (769px - 1024px)
 ========================================================== */
+
+.resume-status {
+    margin-top: 18px;
+    padding: 16px;
+    border: 1px solid #94a3b8;
+    border-radius: 10px;
+    background: #0f172a;
+    color: #f8fafc;
+    line-height: 1.6;
+    overflow-wrap: anywhere;
+}
+.resume-status[hidden] { display: none !important; }
+.resume-status.success { border-color: #34d399; }
+.resume-status.error { border-color: #fb7185; }
+.resume-status.pending { border-color: #60a5fa; }
 
 @media screen and (min-width:769px) and (max-width:1024px){
 

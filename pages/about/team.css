@@ -10,6 +10,9 @@
 .page-hero {
     position: relative;
 
+    /* Keep the People hero flush with the section below. */
+    border-bottom: 0;
+
     min-height: 100vh;
 
     display: flex;
@@ -324,7 +327,7 @@
    CULTURE CARD TITLE
 ========================================================== */
 
-.culture-grid .card h4 {
+.culture-grid .card h3 {
 
     margin-bottom: var(--space-sm);
 }

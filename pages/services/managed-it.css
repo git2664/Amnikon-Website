@@ -66,7 +66,7 @@ body {
 .stats-section,
 .tech-stack,
 .process-section,
-.faq-section {
+.service-faq {
 
     position: relative;
 
@@ -180,7 +180,7 @@ body {
    ========================================================================== */
 
 .section-label h2,
-.faq-section .section-label h2,
+.service-faq .section-label h2,
 .stats-section .section-label h2,
 .tech-stack .section-label h2,
 .process-section .section-label h2 {
@@ -558,7 +558,7 @@ body {
 
 a:focus-visible,
 button:focus-visible,
-.faq-question:focus-visible {
+.service-faq-question:focus-visible {
 
     outline: 2px solid var(--cyan);
 
@@ -1168,7 +1168,7 @@ button:focus-visible,
    FAQ
    ========================================================================== */
 
-.faq-section {
+.service-faq {
     position: relative;
     background: var(--navy-950);
     max-width: 900px;
@@ -1190,7 +1190,7 @@ button:focus-visible,
    FAQ ITEM
    ========================================================================== */
 
-.faq-item {
+.service-faq-item {
     position: relative;
     background: var(--panel);
     border: 1px solid var(--line);
@@ -1210,7 +1210,7 @@ button:focus-visible,
    FAQ ITEM HOVER
    ========================================================================== */
 
-.faq-item:hover {
+.service-faq-item:hover {
     border-color: var(--line-bright);
     background: var(--panel-light);
     transform: translateY(-1px);
@@ -1221,7 +1221,7 @@ button:focus-visible,
    FAQ QUESTION
    ========================================================================== */
 
-.faq-question {
+.service-faq-question {
     width: 100%;
 
     display: flex;
@@ -1250,11 +1250,11 @@ button:focus-visible,
         background 0.3s var(--ease);
 }
 
-.faq-question:hover {
+.service-faq-question:hover {
     background: rgba(61, 219, 217, 0.035);
 }
 
-.faq-question > span:first-child {
+.service-faq-question > span:not(.service-faq-toggle) {
     flex: 1;
 }
 
@@ -1263,7 +1263,7 @@ button:focus-visible,
    FAQ TOGGLE
    ========================================================================== */
 
-.faq-toggle {
+.service-faq-toggle {
     width: 30px;
     height: 30px;
 
@@ -1297,7 +1297,7 @@ button:focus-visible,
    FAQ ANSWER — CLOSED
    ========================================================================== */
 
-.faq-answer {
+.service-faq-answer {
     max-height: 0;
     opacity: 0;
 
@@ -1325,7 +1325,7 @@ button:focus-visible,
    FAQ ANSWER — OPEN
    ========================================================================== */
 
-.faq-item.active .faq-answer {
+.service-faq-item[open] .service-faq-answer {
     max-height: 300px;
     opacity: 1;
 
@@ -1340,7 +1340,7 @@ button:focus-visible,
    FAQ — ACTIVE ITEM
    ========================================================================== */
 
-.faq-item.active {
+.service-faq-item[open] {
     border-color: var(--line-bright);
     background: var(--panel-light);
 
@@ -1354,7 +1354,7 @@ button:focus-visible,
    FAQ — ACTIVE TOGGLE
    ========================================================================== */
 
-.faq-item.active .faq-toggle {
+.service-faq-item[open] .service-faq-toggle {
     transform: rotate(180deg);
 
     background: var(--cyan);
@@ -1371,7 +1371,7 @@ button:focus-visible,
    FAQ FOCUS
    ========================================================================== */
 
-.faq-question:focus-visible {
+.service-faq-question:focus-visible {
     outline: 2px solid var(--cyan);
     outline-offset: -2px;
 }
@@ -1383,10 +1383,10 @@ button:focus-visible,
 
 @media (prefers-reduced-motion: reduce) {
 
-    .faq-item,
-    .faq-question,
-    .faq-toggle,
-    .faq-answer {
+    .service-faq-item,
+    .service-faq-question,
+    .service-faq-toggle,
+    .service-faq-answer {
         transition: none;
     }
 
@@ -1399,23 +1399,23 @@ button:focus-visible,
 
 @media (max-width: 560px) {
 
-    .faq-question {
+    .service-faq-question {
         padding: 1.2rem 1.1rem;
         font-size: 0.92rem;
     }
 
-    .faq-answer {
+    .service-faq-answer {
         padding-left: 1.1rem;
         padding-right: 1.1rem;
         font-size: 0.88rem;
     }
 
-    .faq-item.active .faq-answer {
+    .service-faq-item[open] .service-faq-answer {
         padding-top: 0.8rem;
         padding-bottom: 1.2rem;
     }
 
-    .faq-toggle {
+    .service-faq-toggle {
         width: 27px;
         height: 27px;
         font-size: 1rem;
@@ -1665,7 +1665,7 @@ button:focus-visible,
     .stats-section,
     .tech-stack,
     .process-section,
-    .faq-section {
+    .service-faq {
 
         padding: 4.5rem 6vw;
     }

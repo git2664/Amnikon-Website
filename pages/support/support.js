@@ -2,13 +2,23 @@
    SUPPORT PAGE
 ========================================================== */
 
-gsap.registerPlugin(ScrollTrigger);
+// Animations must never prevent the support form from registering its handlers.
+const supportAnimations = typeof gsap !== "undefined" ? gsap : {
+    registerPlugin() {},
+    timeline() { return { from() { return this; } }; },
+    from() {},
+    to() {}
+};
+
+if (typeof ScrollTrigger !== "undefined") {
+    supportAnimations.registerPlugin(ScrollTrigger);
+}
 
 /* ==========================================================
    HERO ANIMATION
 ========================================================== */
 
-const heroTimeline = gsap.timeline();
+const heroTimeline = supportAnimations.timeline();
 
 heroTimeline
 .from(".support-badge",{
@@ -44,7 +54,7 @@ heroTimeline
    SUPPORT CARDS
 ========================================================== */
 
-gsap.from(".support-option-card",{
+supportAnimations.from(".support-option-card",{
 
     scrollTrigger:{
         trigger:".support-options",
@@ -64,7 +74,7 @@ gsap.from(".support-option-card",{
    TICKET CARD
 ========================================================== */
 
-gsap.from(".ticket-card",{
+supportAnimations.from(".ticket-card",{
 
     scrollTrigger:{
         trigger:".ticket-card",
@@ -83,7 +93,7 @@ gsap.from(".ticket-card",{
    FLOATING CARD
 ========================================================== */
 
-gsap.to(".ticket-card",{
+supportAnimations.to(".ticket-card",{
 
     y:10,
 
@@ -106,7 +116,7 @@ document.querySelectorAll(".form-control").forEach(input=>{
 
     input.addEventListener("focus",()=>{
 
-        gsap.to(input,{
+        supportAnimations.to(input,{
             scale:1.02,
             duration:.2
         });
@@ -115,7 +125,7 @@ document.querySelectorAll(".form-control").forEach(input=>{
 
     input.addEventListener("blur",()=>{
 
-        gsap.to(input,{
+        supportAnimations.to(input,{
             scale:1,
             duration:.2
         });
@@ -135,7 +145,7 @@ if(submitButton){
 
     submitButton.addEventListener("mouseenter",()=>{
 
-        gsap.to(submitButton,{
+        supportAnimations.to(submitButton,{
             scale:1.05,
             duration:.2
         });
@@ -144,7 +154,7 @@ if(submitButton){
 
     submitButton.addEventListener("mouseleave",()=>{
 
-        gsap.to(submitButton,{
+        supportAnimations.to(submitButton,{
             scale:1,
             duration:.2
         });
@@ -172,6 +182,8 @@ form.addEventListener("submit",async function(e){
 
     e.preventDefault();
 
+    if (btn.disabled) return;
+
     btn.disabled=true;
 
     btn.innerHTML="Submitting...";
@@ -186,6 +198,10 @@ form.addEventListener("submit",async function(e){
 
         email:document.getElementById("email").value.trim(),
 
+        priority:document.getElementById("priority").value,
+
+        category:document.getElementById("category").value,
+
         subject:document.getElementById("subject").value.trim(),
 
         message:document.getElementById("message").value.trim()
@@ -194,12 +210,16 @@ form.addEventListener("submit",async function(e){
 
     try{
 
-        const response=await fetch("https://amnikontechnologies.com/api/api/support",{
+        data.submissionId = await AmnikonApi.submissionId("support", data);
+        const protectionHeaders = await AmnikonFormProtection.headers(form);
+
+        const response=await fetch(AmnikonApi.endpoint("support"),{
 
             method:"POST",
 
             headers:{
-                "Content-Type":"application/json"
+                "Content-Type":"application/json",
+                ...protectionHeaders
             },
 
             body:JSON.stringify(data)
@@ -208,28 +228,31 @@ form.addEventListener("submit",async function(e){
 
         const result=await response.json();
 
-        if(response.ok){
+        if(response.ok && (result.success === true || result.Success === true)){
 
-            success.innerHTML="✅ Support ticket submitted successfully.";
+            success.textContent="Your enquiry has been received. Our team will review it and contact you." +
+                (result.submissionId ? " Reference: " + result.submissionId + "." : "") +
+                (result.status === "queued" ? " A confirmation email will follow after processing." : "");
 
             success.classList.add("show");
 
-            gsap.from(success,{
+            supportAnimations.from(success,{
                 opacity:0,
                 y:20,
                 duration:.5
             });
 
             form.reset();
+            AmnikonApi.completeSubmission("support");
 
         }
         else{
 
-            error.innerHTML=result.message || "Something went wrong.";
+            error.textContent=AmnikonFormProtection.rejectionMessage(response, result, "We could not confirm receipt of your enquiry. Please try again later.");
 
             error.classList.add("show");
 
-            gsap.from(error,{
+            supportAnimations.from(error,{
                 opacity:0,
                 y:20,
                 duration:.5
@@ -242,11 +265,11 @@ form.addEventListener("submit",async function(e){
 
         console.error(err);
 
-        error.innerHTML="Unable to connect to the server.";
+        error.textContent=AmnikonFormProtection.errorMessage(err, "We could not confirm receipt of your enquiry. Your details have been kept. Please try again later.");
 
         error.classList.add("show");
 
-        gsap.from(error,{
+        supportAnimations.from(error,{
             opacity:0,
             y:20,
             duration:.5
@@ -254,9 +277,10 @@ form.addEventListener("submit",async function(e){
 
     }
 
+    AmnikonFormProtection.reset(form);
     btn.disabled=false;
 
-    btn.innerHTML="Submit Ticket →";
+    btn.innerHTML="Send Enquiry →";
 
 });
 
@@ -271,7 +295,7 @@ window.addEventListener("scroll",()=>{
 
     const scroll=window.scrollY;
 
-    gsap.to(".support-hero .container",{
+    supportAnimations.to(".support-hero .container",{
 
         y:scroll*-0.12,
 

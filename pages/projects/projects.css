@@ -46,7 +46,7 @@
 
     border:1px solid rgba(37,99,235,.25);
 
-    color:#60a5fa;
+    color: #ffffff;
 
     text-transform:uppercase;
 
@@ -912,3 +912,9 @@
     }
 
 }
+/* Brochure case studies: keep scope and reported results readable. */
+.project-info .project-result { color: #fff; font-weight: 600; margin-top: 12px; }
+.project-result span { display: block; font-size: .7rem; letter-spacing: .08em; text-transform: uppercase; color: #cbd5e1; margin-bottom: 4px; }
+.project-detail { margin-top: 20px; }
+.project-detail h3 { font-size: 1.05rem; color: #fff; margin-bottom: 8px; }
+.modal-body .project-source { font-size: .8rem; color: #cbd5e1; margin-top: 18px; }

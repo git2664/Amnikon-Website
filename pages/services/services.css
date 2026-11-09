@@ -151,7 +151,7 @@
 
     display:inline-block;
 
-    color:#38bdf8;
+    color: #ffffff;
 
     font-size:.85rem;
 
@@ -779,7 +779,7 @@
 
 .section-header .eyebrow{
 
-    color:#38bdf8;
+    color: #ffffff;
 
     font-size:.85rem;
 
@@ -1800,3 +1800,8 @@ SMALL MOBILE
 
 
 }
+
+/* Preserve the explicit actions on the eight accessible service links. */
+.timeline-action { display: inline-block; margin-top: 18px; color: #fff; font-weight: 600; font-size: .9rem; }
+.timeline-card:focus-visible .timeline-content { border-color: #60a5fa; }
+.services-timeline .timeline-item { scroll-margin-top: 140px; }

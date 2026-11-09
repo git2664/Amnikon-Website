@@ -1,32 +1,83 @@
-name: Deploy Frontend to IIS
+name: Validate and publish website frontend
 
 on:
   push:
-    branches:
-      - main
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
 
-    
+permissions:
+  contents: read
+
+concurrency:
+  group: amnikon-frontend-${{ github.ref }}
+  cancel-in-progress: false
+
 jobs:
-  deploy:
-    runs-on: self-hosted
-
+  build:
+    runs-on: windows-latest
+    timeout-minutes: 20
     steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v4
-
-      - name: Deploy Frontend Files
-    
-        shell: powershell
+      - name: Check out source
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          persist-credentials: false
+      - name: Test public artifact boundaries
+        shell: pwsh
+        run: ./deployment/Test-ReleaseArtifacts.ps1
+      - name: Test server artifact validation
+        shell: pwsh
+        run: ./deployment/tests/GitHubFrontendArtifacts.ps1
+      - name: Build production frontend only
+        shell: pwsh
         run: |
-          $source = "${{ github.workspace }}"
-          $destination = "C:\Amnikon Website V 1.1"
+          $output = Join-Path $env:RUNNER_TEMP 'amnikon-frontend'
+          ./deployment/New-ReleaseArtifacts.ps1 -ProjectRoot $env:GITHUB_WORKSPACE -OutputDirectory $output -FrontendOnly -SearchVisibility Production
+          "RELEASE_OUTPUT=$output" >> $env:GITHUB_ENV
+      - name: Bind release metadata to this main commit
+        if: github.ref == 'refs/heads/main' && github.repository == 'git2664/Amnikon-Website'
+        shell: pwsh
+        run: ./deployment/New-GitHubFrontendDescriptor.ps1 -ReleaseDirectory $env:RELEASE_OUTPUT
+      - name: Upload validated frontend bundle
+        if: github.ref == 'refs/heads/main' && github.repository == 'git2664/Amnikon-Website'
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7
+        with:
+          name: frontend-${{ github.sha }}
+          path: ${{ env.RELEASE_OUTPUT }}/*
+          if-no-files-found: error
+          overwrite: true
+          retention-days: 7
 
-          robocopy $source $destination /MIR /XD .git .github
-
-          if ($LASTEXITCODE -le 7) {
-            Write-Host "Deployment completed successfully."
-            exit 0
-          } else {
-            Write-Error "Robocopy failed with exit code $LASTEXITCODE"
-            exit $LASTEXITCODE
-          }
+  publish:
+    needs: build
+    if: github.ref == 'refs/heads/main' && github.repository == 'git2664/Amnikon-Website' && (github.event_name == 'push' || github.event_name == 'workflow_dispatch')
+    runs-on: windows-latest
+    timeout-minutes: 10
+    permissions:
+      contents: write
+    steps:
+      - name: Download this run's validated frontend
+        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8
+        with:
+          name: frontend-${{ github.sha }}
+          path: release
+      - name: Publish complete deployment release
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          $tag = "website-$env:GITHUB_SHA-run-$env:GITHUB_RUN_ID-attempt-$env:GITHUB_RUN_ATTEMPT"
+          $notes = Join-Path $env:RUNNER_TEMP 'frontend-release-notes.txt'
+          @"
+          Static frontend from main commit $env:GITHUB_SHA.
+          Run: https://github.com/$env:GITHUB_REPOSITORY/actions/runs/$env:GITHUB_RUN_ID
+          The IIS server pulls this bundle after the workflow succeeds and verifies the current main commit.
+          Backend code, SMTP credentials and applicant data are excluded.
+          "@ | Set-Content -LiteralPath $notes
+          $assets = @('frontend.zip','artifact-manifest.json','search-settings.json','release-info.json','checksums.json') | ForEach-Object { Join-Path $env:GITHUB_WORKSPACE "release/$_" }
+          gh release create $tag @assets --repo $env:GITHUB_REPOSITORY --target $env:GITHUB_SHA --draft --title "Website $($env:GITHUB_SHA.Substring(0,12))" --notes-file $notes
+          if ($LASTEXITCODE -ne 0) { throw 'Deployment release upload failed.' }
+          gh release edit $tag --repo $env:GITHUB_REPOSITORY --draft=false --latest
+          if ($LASTEXITCODE -ne 0) { throw 'Deployment release publication failed.' }
+          "Frontend bundle published. IIS checks every two minutes; actual deployment status is recorded on the server." >> $env:GITHUB_STEP_SUMMARY
