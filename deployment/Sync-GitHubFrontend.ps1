@@ -71,6 +71,13 @@ try{
  $stage='stage-frontend'
  Expand-FrontendArtifact $directory $candidate $records
  Copy-Item -LiteralPath (Join-Path $root 'frontend.web.config') -Destination (Join-Path $candidate 'web.config') -Force
+ # The API pool must read the logical parent's config, including when a file
+ # copied from the private template retained a more restrictive file ACL.
+ $configPath=Join-Path $candidate 'web.config';$configAcl=Get-Acl -LiteralPath $configPath
+ foreach($readerIdentity in @('IUSR','IIS AppPool\DefaultAppPool','IIS AppPool\CareerService')){
+  $configAcl.AddAccessRule((New-Object Security.AccessControl.FileSystemAccessRule($readerIdentity,'ReadAndExecute','Allow')))
+ }
+ Set-Acl -LiteralPath $configPath -AclObject $configAcl
  # Confirm main did not advance while the release was downloading.
  if((Get-GitHubJson ($repo+'/git/ref/heads/main')).object.sha -cne $sha){$status.state='superseded-before-switch';Save-SyncStatus;return}
  $stage='switch-frontend'
@@ -85,6 +92,8 @@ try{
  $stage='complete';Save-SyncStatus
 }catch{
  $status.state='failed';$status.errorType=$_.Exception.GetType().Name
+ if($_.Exception.Data.Contains('HttpStatus')){$status.backendHttpStatus=$_.Exception.Data['HttpStatus']}
+ if($_.Exception.Data.Contains('IisErrorCode')){$status.iisErrorCode=$_.Exception.Data['IisErrorCode']}
  $safeCodes=@('untrusted-release','untrusted-workflow-run','workflow-did-not-succeed','incomplete-release-assets','missing-release-asset','release-descriptor-mismatch','iis-targets-changed','unexpected-current-frontend-root','hosted-homepage-mismatch','hosted-public-file-unavailable','existing-backend-unavailable','private-endpoint-exposed','https-redirect-invalid','invalid-public-manifest','unsafe-frontend-archive','bundle-checksum-mismatch','frontend-entry-checksum-mismatch','incomplete-existing-candidate')
  if($_.Exception.Message -cin $safeCodes){$status.errorCode=$_.Exception.Message}
  if($switched){

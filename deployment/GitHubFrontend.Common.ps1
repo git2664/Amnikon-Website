@@ -90,12 +90,16 @@ function Get-FrontendHttp([string]$Url,[string]$Method='GET'){
  $request=[Net.HttpWebRequest]::Create($Url);$request.Method=$Method;$request.AllowAutoRedirect=$false;$request.Timeout=15000;$request.Headers['Accept-Encoding']='identity'
  $response=$null
  try{try{$response=$request.GetResponse()}catch [Net.WebException]{if(-not $_.Exception.Response){throw};$response=$_.Exception.Response}
-  $hash=$null
+  $hash=$null;$iisErrorCode=$null
   if($Method -eq 'GET' -and [int]$response.StatusCode -eq 200){$stream=$response.GetResponseStream();$sha=[Security.Cryptography.SHA256]::Create();try{$hash=[BitConverter]::ToString($sha.ComputeHash($stream)).Replace('-','')}finally{$stream.Dispose();$sha.Dispose()}}
-  return [pscustomobject]@{status=[int]$response.StatusCode;sha256=$hash;location=$response.Headers['Location']}
+  if([int]$response.StatusCode -ge 500){
+   $reader=New-Object IO.StreamReader($response.GetResponseStream())
+   try{$buffer=New-Object char[] 65536;$count=$reader.Read($buffer,0,$buffer.Length);$errorText=[string]::new($buffer,0,$count);$match=[regex]::Match($errorText,'0x[0-9a-fA-F]{8}');if($match.Success){$iisErrorCode=$match.Value}}finally{$reader.Dispose()}
+  }
+  return [pscustomobject]@{status=[int]$response.StatusCode;sha256=$hash;location=$response.Headers['Location'];iisErrorCode=$iisErrorCode}
  }finally{if($response){$response.Dispose()}}
 }
-function Test-HostedFrontend($Records){
+function Test-HostedFrontend($Records,[int]$ReadinessAttempts=12,[int]$RetryDelayMilliseconds=1000){
  $origin='https://amnikontechnologies.com'
  $homepageResponse=Get-FrontendHttp ($origin+'/pages/home/index.html')
  if($homepageResponse.status -ne 200 -or $homepageResponse.sha256 -ne $Records['pages/home/index.html'].sha256){throw 'hosted-homepage-mismatch'}
@@ -103,7 +107,16 @@ function Test-HostedFrontend($Records){
   $encoded=($name.Split('/')|ForEach-Object{[Uri]::EscapeDataString($_)}) -join '/'
   if((Get-FrontendHttp ($origin+'/'+$encoded) 'HEAD').status -ne 200){throw 'hosted-public-file-unavailable'}
  }
- if((Get-FrontendHttp ($origin+'/api/api/contact')).status -ne 405){throw 'existing-backend-unavailable'}
+ $backendResponse=$null
+ for($readinessAttempt=0;$readinessAttempt -lt $ReadinessAttempts;$readinessAttempt++){
+  try{$backendResponse=Get-FrontendHttp ($origin+'/api/api/contact');if($backendResponse.status -eq 405){break}}catch{if($readinessAttempt -eq $ReadinessAttempts-1){throw}}
+  if($readinessAttempt -lt $ReadinessAttempts-1 -and $RetryDelayMilliseconds -gt 0){Start-Sleep -Milliseconds $RetryDelayMilliseconds}
+ }
+ if(-not $backendResponse -or $backendResponse.status -ne 405){
+  $failure=New-Object Exception('existing-backend-unavailable')
+  if($backendResponse){$failure.Data['HttpStatus']=[int]$backendResponse.status;if($backendResponse.iisErrorCode){$failure.Data['IisErrorCode']=[string]$backendResponse.iisErrorCode}}
+  throw $failure
+ }
  foreach($path in @('/api/appsettings.json','/api/swagger/index.html')){if((Get-FrontendHttp ($origin+$path)).status -notin @(403,404)){throw 'private-endpoint-exposed'}}
  $redirect=Get-FrontendHttp 'http://amnikontechnologies.com/pages/home/index.html'
  if($redirect.status -notin @(301,302,307,308) -or -not $redirect.location.StartsWith($origin+'/')){throw 'https-redirect-invalid'}

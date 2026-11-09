@@ -51,10 +51,10 @@ function Get-FrontendHttp([string]$Url,[string]$Method='GET'){
  return [pscustomobject]@{status=200;sha256=$script:testHash}
 }
 $healthRecords=@{'pages/home/index.html'=@{sha256=$script:testHash};'index.html'=@{sha256=$script:testHash}}
-Test-HostedFrontend $healthRecords
+Test-HostedFrontend $healthRecords -ReadinessAttempts 1 -RetryDelayMilliseconds 0
 foreach($scenario in @('bad-redirect','bad-api')){
  $script:healthScenario=$scenario;$blocked=$false
- try{Test-HostedFrontend $healthRecords}catch{$blocked=$true}
+ try{Test-HostedFrontend $healthRecords -ReadinessAttempts 1 -RetryDelayMilliseconds 0}catch{$blocked=$true}
  if(-not $blocked){throw ('Unhealthy hosted site accepted: '+$scenario)}
 }
 Write-Output 'PASS: real hosted-health logic accepts a healthy site and rejects API/redirect failures through a fake transport.'
