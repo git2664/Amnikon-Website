@@ -42,12 +42,12 @@
 
                 <div class="footer-cta-actions">
 
-                    <a href="../contact/contact.html"
+                    <a href="/pages/contact/contact.html"
                        class="btn btn-primary">
                         General Enquiries
                     </a>
 
-                    <a href="../support/support.html"
+                    <a href="/pages/support/support.html"
                        class="btn btn-outline">
                         Request a Consultation
                     </a>
@@ -94,25 +94,25 @@
                     <ul>
 
                         <li>
-                            <a href="../about/company.html">
+                            <a href="/pages/about/company.html">
                                 About Us
                             </a>
                         </li>
 
                         <li>
-                            <a href="../about/team.html">
+                            <a href="/pages/about/team.html">
                                 Our People &amp; Culture
                             </a>
                         </li>
 
                         <li>
-                            <a href="../projects/index.html">
+                            <a href="/pages/projects/index.html">
                                 Projects
                             </a>
                         </li>
 
                         <li>
-                            <a href="../careers/careers.html">
+                            <a href="/pages/careers/careers.html">
                                 Careers
                             </a>
                         </li>
@@ -129,14 +129,14 @@
                     <h5>Services</h5>
 
                     <ul>
-                        <li><a href="../services/advisory.html">IT Advisory</a></li>
-                        <li><a href="../services/professional-services.html">Professional Services</a></li>
-                        <li><a href="../services/cloud.html">Cloud &amp; Azure</a></li>
-                        <li><a href="../services/cybersecurity.html">Cybersecurity</a></li>
-                        <li><a href="../services/communication-collaboration.html">Communication &amp; Collaboration</a></li>
-                        <li><a href="../services/digital-services.html">Digital Services</a></li>
-                        <li><a href="../services/ai-automation.html">AI &amp; Automation</a></li>
-                        <li><a href="../services/managed-it.html">Managed IT Services</a></li>
+                        <li><a href="/pages/services/advisory.html">IT Advisory</a></li>
+                        <li><a href="/pages/services/professional-services.html">Professional Services</a></li>
+                        <li><a href="/pages/services/cloud.html">Cloud &amp; Azure</a></li>
+                        <li><a href="/pages/services/cybersecurity.html">Cybersecurity</a></li>
+                        <li><a href="/pages/services/communication-collaboration.html">Communication &amp; Collaboration</a></li>
+                        <li><a href="/pages/services/digital-services.html">Digital Services</a></li>
+                        <li><a href="/pages/services/ai-automation.html">AI &amp; Automation</a></li>
+                        <li><a href="/pages/services/managed-it.html">Managed IT Services</a></li>
                     </ul>
 
                 </div>
@@ -209,11 +209,11 @@
 
                 <div class="footer-bottom-links">
 
-                    <a href="../legal/privacy.html">
+                    <a href="/pages/legal/privacy.html">
                         Privacy Policy
                     </a>
 
-                    <a href="../legal/terms.html">
+                    <a href="/pages/legal/terms.html">
                         Terms of Service
                     </a>
 
