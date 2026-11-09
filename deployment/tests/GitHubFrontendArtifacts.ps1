@@ -39,3 +39,22 @@ foreach($case in @('api','preview','wrong-entry-hash','tampered-checksum')){
  if(-not $blocked){throw ('Invalid bundle accepted: '+$case)};$rejected++
 }
 Write-Output ('PASS: valid static bundle accepted; '+$rejected+' unsafe/private/preview/checksum cases rejected. No IIS or network changes.')
+
+# Exercise the real health-check function with a fake HTTP transport. This also
+# catches attempts to assign PowerShell's read-only automatic variables.
+$script:healthScenario='healthy'
+$script:testHash='A'*64
+function Get-FrontendHttp([string]$Url,[string]$Method='GET'){
+ if($Url.StartsWith('http://')){return [pscustomobject]@{status=301;location=$(if($script:healthScenario -eq 'bad-redirect'){'https://wrong.example/'}else{'https://amnikontechnologies.com/pages/home/index.html'})}}
+ if($Url.EndsWith('/api/api/contact')){return [pscustomobject]@{status=$(if($script:healthScenario -eq 'bad-api'){500}else{405})}}
+ if($Url.EndsWith('/api/appsettings.json') -or $Url.EndsWith('/api/swagger/index.html')){return [pscustomobject]@{status=404}}
+ return [pscustomobject]@{status=200;sha256=$script:testHash}
+}
+$healthRecords=@{'pages/home/index.html'=@{sha256=$script:testHash};'index.html'=@{sha256=$script:testHash}}
+Test-HostedFrontend $healthRecords
+foreach($scenario in @('bad-redirect','bad-api')){
+ $script:healthScenario=$scenario;$blocked=$false
+ try{Test-HostedFrontend $healthRecords}catch{$blocked=$true}
+ if(-not $blocked){throw ('Unhealthy hosted site accepted: '+$scenario)}
+}
+Write-Output 'PASS: real hosted-health logic accepts a healthy site and rejects API/redirect failures through a fake transport.'

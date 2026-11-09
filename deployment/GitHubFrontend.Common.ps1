@@ -97,8 +97,8 @@ function Get-FrontendHttp([string]$Url,[string]$Method='GET'){
 }
 function Test-HostedFrontend($Records){
  $origin='https://amnikontechnologies.com'
- $home=Get-FrontendHttp ($origin+'/pages/home/index.html')
- if($home.status -ne 200 -or $home.sha256 -ne $Records['pages/home/index.html'].sha256){throw 'hosted-homepage-mismatch'}
+ $homepageResponse=Get-FrontendHttp ($origin+'/pages/home/index.html')
+ if($homepageResponse.status -ne 200 -or $homepageResponse.sha256 -ne $Records['pages/home/index.html'].sha256){throw 'hosted-homepage-mismatch'}
  foreach($name in $Records.Keys){
   $encoded=($name.Split('/')|ForEach-Object{[Uri]::EscapeDataString($_)}) -join '/'
   if((Get-FrontendHttp ($origin+'/'+$encoded) 'HEAD').status -ne 200){throw 'hosted-public-file-unavailable'}

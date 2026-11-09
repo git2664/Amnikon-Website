@@ -53,10 +53,12 @@ try{
  $directory=Join-Path $root ('downloads\'+$tag)
  [IO.Directory]::CreateDirectory($directory)|Out-Null
  $stage='download-verified-run-artifacts'
+ $status.state='downloading';Save-SyncStatus
  foreach($name in @('release-info.json','checksums.json','artifact-manifest.json','search-settings.json','frontend.zip')){Download-ReleaseFile $assets[$name] $tag $directory}
  $info=Read-FrontendJson (Join-Path $directory 'release-info.json')
  if($info.schemaVersion -ne 1 -or $info.repository -cne 'git2664/Amnikon-Website' -or $info.sourceSha -cne $sha -or $info.ref -cne 'refs/heads/main' -or $info.workflowPath -cne '.github/workflows/deploy.yml' -or [string]$info.workflowRunId -ne $runId -or [string]$info.runAttempt -notmatch '^\d+$' -or [int]$info.runAttempt -lt 1 -or [int]$info.runAttempt -gt [int]$attempt -or $info.frontendOnly -ne $true -or $info.publicOrigin -cne 'https://amnikontechnologies.com'){throw 'release-descriptor-mismatch'}
  $stage='validate-static-frontend'
+ $status.state='validating';Save-SyncStatus
  $records=Assert-FrontendArtifact $directory
  if($CheckOnly){$status.state='verified-not-deployed';Save-SyncStatus;return}
  Add-Type -Path "$env:windir\System32\inetsrv\Microsoft.Web.Administration.dll"
@@ -75,6 +77,7 @@ try{
  $site.Applications['/'].VirtualDirectories['/'].PhysicalPath=$candidate
  $manager.CommitChanges();$switched=$true
  $stage='check-public-website'
+ $status.state='checking-public-website';Save-SyncStatus
  Test-HostedFrontend $records
  $deployedUtc=[DateTime]::UtcNow.ToString('o')
  @{releaseId=[string]$release.id;sourceSha=$sha;workflowRunId=$runId;frontendRoot=$candidate;previousFrontendRoot=$oldFrontend;deployedUtc=$deployedUtc}|ConvertTo-Json|Set-Content -LiteralPath $statePath -Encoding UTF8
