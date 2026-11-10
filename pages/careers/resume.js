@@ -3,7 +3,6 @@
     if (!form) return;
     const submitButton = form.querySelector("button[type='submit']");
     const status = document.getElementById("resume-status");
-    const reviewMessage = "Our HR team may contact you if a suitable opportunity becomes available and you are shortlisted.";
 
     function showStatus(message, state) {
         status.textContent = message;
@@ -45,12 +44,7 @@
                 showStatus(errors || AmnikonFormProtection.rejectionMessage(response, result, "We could not confirm receipt of your resume. Your details have been kept. Please check the form and try again later."), "error");
                 return;
             }
-            const queued = result.status === "queued" || (response.status === 202 && result.status !== "completed");
-            const receipt = queued
-                ? "Your resume has been received and is being processed. You will receive a confirmation email once processing is complete. "
-                : "Thank you for sharing your resume. Your resume has been received. ";
-            const reference = result.applicationId ? " Application reference: " + result.applicationId + "." : "";
-            showStatus(receipt + reviewMessage + reference, "success");
+            showStatus("Your resume has been received and is being processed.", "success");
             form.reset();
             AmnikonApi.completeSubmission("careers");
         } catch (error) {
