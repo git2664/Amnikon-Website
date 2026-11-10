@@ -1542,3 +1542,59 @@ RESUME SECTION
     }
 
 }
+
+/* Culture sections with a sticky menu and scroll tracking. */
+#culture {padding:80px 24px;scroll-margin-top:120px;}
+#culture .benefits-layout {max-width:1250px;padding:0;grid-template-columns:260px minmax(0,1fr);gap:32px;align-items:start;}
+#culture .benefits-sidebar {display:flex;flex-direction:column;gap:12px;position:sticky;top:130px;padding:0;}
+#culture .sidebar-line,#culture .sidebar-progress {display:none;}
+#culture .benefit-link {margin:0;padding:18px 20px;text-align:left;font-size:1rem;line-height:1.45;color:#bfcee2;background:#142137;border:1px solid #2b405e;border-radius:12px;transition:background .2s,transform .2s,box-shadow .2s;}
+#culture .benefit-link:hover,#culture .benefit-link:focus-visible {background:#203c59;color:white;transform:translateY(-2px);box-shadow:0 6px 22px #0084ff25;}
+#culture .benefit-link.active {color:white;background:#154676;border-color:#60c4f3;box-shadow:inset 4px 0 #65def2;}
+#culture .benefits-content {display:flex;flex-direction:column;gap:40px;min-width:0;}
+#culture .benefit-panel {scroll-margin-top:130px;min-height:calc(100svh - 190px);height:auto;display:flex;flex-direction:column;justify-content:flex-start;padding:32px;background:linear-gradient(130deg,#15263f,#0e192b);border:1px solid #29435e;border-radius:20px;}
+#culture .benefit-panel[hidden] {display:none;}
+#culture .benefit-panel h2 {font-size:clamp(1.7rem,3vw,2.5rem);line-height:1.2;margin:0 0 18px;}
+#culture .benefit-panel p {font-size:1rem;line-height:1.7;margin-bottom:24px;}
+#culture .benefit-points {gap:14px 24px;}
+.careers-openings {padding:48px 24px 64px;}
+.openings-header {opacity:1;transform:none;max-width:1180px;margin:auto;}
+.openings-header h2 {font-size:clamp(2rem,4vw,3rem);line-height:1.2;max-width:850px;}
+.openings-header p {max-width:850px;}
+.careers-hero .hero-label,.careers-hero .hero-title span,.careers-hero p,.careers-hero .hero-actions {opacity:1;transform:none;filter:none;}
+.resume-section {padding-top:80px;}
+@media(max-width:850px) {
+ #culture .benefits-layout {grid-template-columns:1fr;}
+ #culture .benefits-sidebar {position:static;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));}
+ #culture .benefit-link {font-size:.9rem;padding:14px;}
+ #culture .benefit-panel {padding:24px;min-height:0;}
+}
+@media(max-width:550px) {#culture .benefit-points {grid-template-columns:1fr;} #culture {padding:48px 16px;}}
+@media(prefers-reduced-motion:reduce) {#culture .benefit-link {transition:none;transform:none;}}
+
+/* Open Careers layout without card boxes. */
+#culture .benefit-panel {background:none;border:0;border-radius:0;box-shadow:none;padding:18px 0 24px 32px;}
+#culture .benefit-link {background:none;border:0;border-left:2px solid #334155;border-radius:0;box-shadow:none;color:#b9c7db;}
+#culture .benefit-link.active {background:none;border-left-color:#56d9f0;box-shadow:none;color:#56d9f0;}
+#culture .benefit-link:hover,#culture .benefit-link:focus-visible {background:none;box-shadow:none;color:#fff;transform:none;border-left-color:#8deaff;}
+#culture .benefit-link:focus-visible {outline:2px solid #7dd3fc;outline-offset:4px;}
+@media(max-width:850px) {#culture .benefit-panel {padding:24px 0;}}
+
+/* Match the original Careers sidebar: fixed left navigation, scrolling right content. */
+#culture {margin-top:0;overflow:visible;}
+#culture .benefits-layout {align-items:start;}
+#culture .benefits-sidebar {align-self:start;top:130px;gap:16px;padding-left:28px;}
+#culture .sidebar-line {display:block;position:absolute;left:0;top:0;width:2px;height:100%;background:#ffffff26;}
+#culture .sidebar-progress {display:block;position:absolute;left:0;width:2px;background:#56d9f0;transition:top .25s ease,height .25s ease;pointer-events:none;}
+#culture .benefit-link {border:0;padding:16px 12px;text-align:left;font-size:clamp(1rem,1.5vw,1.35rem);}
+#culture .benefits-content {gap:48px;}
+#culture .benefit-panel {padding:16px 0 32px;min-height:calc(100svh - 190px);scroll-margin-top:130px;}
+#culture .benefit-points {margin-top:20px;}
+@media(max-width:850px) {
+ #culture .benefits-sidebar {position:static;padding-left:0;gap:8px;}
+ #culture .sidebar-line,#culture .sidebar-progress {display:none;}
+ #culture .benefit-link {border-left:2px solid #334155;font-size:.95rem;padding:12px;}
+ #culture .benefit-link.active {border-left-color:#56d9f0;}
+ #culture .benefit-panel {min-height:0;padding:16px 0 24px;}
+}
+@media(prefers-reduced-motion:reduce) {#culture .sidebar-progress {transition:none;}}

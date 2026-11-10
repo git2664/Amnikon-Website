@@ -46,6 +46,47 @@
 @media(max-width:650px) {.page-hero{min-height:75svh;padding:140px 0 70px;}.page-hero h1{font-size:2.5rem;}.case-grid,.project-area-grid{grid-template-columns:1fr;}.case-media{height:215px;}.case-info{padding:24px;}.case-info h3{font-size:1.4rem;}.project-conversation-inner{padding:28px 24px;}.project-conversation-action{width:100%;}.project-conversation-action .btn{width:100%;justify-content:center;white-space:normal;}}
 @media(prefers-reduced-motion:reduce) {.case-open,.project-area{transition:none;}}
 
+/* Place the carousel arrows beside the project cards. */
+.projects-section .case-controls {
+  display: block;
+  position: relative;
+  z-index: 3;
+  height: 0;
+  margin: 0;
+}
+.projects-section .case-controls[hidden] { display: none; }
+.projects-section .case-browse-hint {
+  position: absolute;
+  left: 0;
+  bottom: 24px;
+}
+.projects-section .case-controls-actions {
+  position: absolute;
+  top: var(--case-control-y, 280px);
+  left: -58px;
+  right: -58px;
+  display: flex;
+  justify-content: space-between;
+  pointer-events: none;
+}
+.projects-section .case-controls-actions button {
+  pointer-events: auto;
+  box-shadow: 0 10px 28px #0008;
+}
+.projects-section .case-position {
+  position: absolute;
+  right: 58px;
+  top: -165px;
+}
+@media (max-width: 1350px) {
+  .projects-section .case-controls-actions { left: 12px; right: 12px; }
+  .projects-section .case-position { right: 12px; }
+}
+@media (max-width: 650px) {
+  .projects-section .case-controls-actions { top: var(--case-control-y, 280px); }
+  .projects-section .case-position { top: -145px; }
+}
+
 /* Preserve the approved tiles while restoring horizontal project browsing. */
 .case-controls {display:flex;align-items:center;justify-content:space-between;gap:20px;margin-bottom:22px;}
 .case-browse-hint {font-size:.88rem;color:#b7cce4;}

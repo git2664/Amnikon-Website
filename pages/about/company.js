@@ -1,100 +1,54 @@
-const cards =
-document.querySelectorAll(".stat-card");
-
-const showcase =
-document.querySelector(".hero-stats-showcase");
-
-const panel =
-document.querySelector(".stat-detail-panel");
-
-const details =
-document.querySelectorAll(".detail-content");
-
-function showStat(card) {
-  showcase.classList.add('focusing'); panel.classList.add('show');
-  cards.forEach(c => {
-    const selected = c === card;
-    c.classList.toggle('active', selected);
-    c.setAttribute('aria-expanded', String(selected));
-  });
-  details.forEach(d => {
-    const selected = d.dataset.detail === card.dataset.card;
-    d.hidden = !selected; d.classList.toggle('active', selected);
-  });
-}
-function hideStats() {
-  showcase.classList.remove('focusing'); panel.classList.remove('show');
-  cards.forEach(c => { c.classList.remove('active'); c.setAttribute('aria-expanded', 'false'); });
-  details.forEach(d => { d.hidden = true; d.classList.remove('active'); });
-}
-cards.forEach(card => {
-  card.tabIndex = 0; card.setAttribute('role', 'button');
-  const detail = [...details].find(d => d.dataset.detail === card.dataset.card);
-  if (detail) { detail.id = 'stat-detail-' + card.dataset.card; card.setAttribute('aria-controls', detail.id); }
-  card.addEventListener('mouseenter', () => showStat(card));
-  card.addEventListener('focus', () => showStat(card));
-  card.addEventListener('click', () => showStat(card));
-  card.addEventListener('keydown', e => {
-    if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); showStat(card); }
-    if (e.key === 'Escape') { e.preventDefault(); hideStats(); }
-  });
-});
-const stats = document.querySelector('.about-stats');
-stats.addEventListener('mouseleave', () => { if (!stats.contains(document.activeElement)) hideStats(); });
-stats.addEventListener('focusout', e => { if (!stats.contains(e.relatedTarget)) hideStats(); });
-hideStats();
-
-// Highlight
-
-const slides =
-document.querySelectorAll(
-".highlights-story .story-slide"
-);
-
-const fill =
-document.querySelector(
-".highlights-story .story-progress-fill"
-);
-
-window.addEventListener("scroll",()=>{
-
-    const section =
-    document.querySelector(
-    ".highlights-story"
-    );
-
-    if(!section) return;
-
-    const rect =
-    section.getBoundingClientRect();
-
-    const progress =
-    Math.max(
-        0,
-        Math.min(
-            1,
-            Math.abs(rect.top) /
-            (section.offsetHeight - window.innerHeight)
-        )
-    );
-
-    const index =
-    Math.min(
-        slides.length - 1,
-        Math.floor(progress * slides.length)
-    );
-
-    slides.forEach(slide=>
-        slide.classList.remove("active")
-    );
-
-    if(slides[index]){
-        slides[index].classList.add("active");
-    }
-
-    if(fill){
-        fill.style.height =
-        `${progress * 100}%`;
-    }
-
+"use strict";
+document.addEventListener("DOMContentLoaded", () => {
+ const cards = [...document.querySelectorAll(".stat-card")];
+ const details = [...document.querySelectorAll(".detail-content")];
+ const summary = document.querySelector(".detail-summary");
+ function show(index) {
+   if(summary) summary.hidden = index !== -1;
+   cards.forEach((card,i) => {card.classList.toggle("active",i===index);card.setAttribute("aria-expanded",String(i===index));});
+   details.forEach((detail,i) => {detail.hidden = i!==index;detail.classList.toggle("active",i===index);});
+ }
+ cards.forEach((card,i) => {
+   card.tabIndex=0;card.setAttribute("role","button");
+   details[i].id="stat-detail-"+i;card.setAttribute("aria-controls",details[i].id);
+   card.addEventListener("mouseenter",()=>show(i));
+   card.addEventListener("focus",()=>show(i));
+   card.addEventListener("click",()=>show(i));
+   card.addEventListener("keydown",e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();show(i);}if(e.key==="Escape")show(-1);});
+ });
+ const stats=document.querySelector(".about-stats");
+ stats?.addEventListener("mouseleave",()=>{if(!stats.contains(document.activeElement))show(-1);});
+ stats?.addEventListener("focusout",e=>{if(!stats.contains(e.relatedTarget))show(-1);});
+ show(-1);
+ const story = document.querySelector('.highlights-story');
+ const panels = [...document.querySelectorAll('.story-slide')];
+ if (!story || !panels.length) return;
+ const track = document.createElement('div');
+ track.className = 'story-track';
+ panels[0].parentNode.append(track);
+ panels.forEach(panel => track.append(panel));
+ let scheduled = false;
+ function updateStory() {
+   scheduled = false;
+   const distance = Math.max(1, story.offsetHeight - window.innerHeight);
+   const progress = Math.max(0, Math.min(1, -story.getBoundingClientRect().top / distance));
+   const position = progress * (panels.length - 1);
+   const index = Math.round(position);
+   panels.forEach((panel, i) => {
+     const visible = i === index;
+     const distanceFromSlide = Math.abs(position - i);
+     const fade = Math.max(0, Math.min(1, (distanceFromSlide - .15) / .35));
+     const opacity = 1 - fade * fade * (3 - 2 * fade);
+     panel.style.opacity = String(opacity);
+     panel.classList.toggle('active', visible);
+     panel.setAttribute('aria-hidden', String(!visible));
+     panel.inert = !visible;
+   });
+ }
+ function scheduleStory() {
+   if (!scheduled) { scheduled = true; window.requestAnimationFrame(updateStory); }
+ }
+ window.addEventListener('scroll', scheduleStory, { passive: true });
+ window.addEventListener('resize', scheduleStory);
+ updateStory();
 });

@@ -133,7 +133,7 @@
               <div class="info-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 11-8 11S4 16 4 10a8 8 0 1 1 16 0Z"/><circle cx="12" cy="10" r="2.5"/></svg></div>
               <div class="contact-card-body">
                 <h3>Our Office</h3>
-                <address>Building A1, Dubai Silicon Oasis<br>Dubai, UAE</address>
+                <address><a class="office-map-link" href="https://www.google.com/maps/search/?api=1&amp;query=Building%20A1%2C%20Dubai%20Silicon%20Oasis%2C%20Dubai%2C%20United%20Arab%20Emirates" target="_blank" rel="noopener noreferrer">Building A1, Dubai Silicon Oasis<br>Dubai, UAE<br><span>Open in Google Maps ↗</span></a></address>
               </div>
             </article>
 
@@ -158,7 +158,7 @@
 
     <section class="map-section">
       <iframe
-        src="https://www.google.com/maps?q=Dubai+Silicon+Oasis&output=embed"
+        title="AMNIKON office location in Dubai Silicon Oasis" src="https://www.google.com/maps?q=Building+A1+Dubai+Silicon+Oasis+Dubai&output=embed"
         loading="lazy"
         allowfullscreen
       >
@@ -177,9 +177,10 @@
           </p>
 
           <form class="contact-form" id="contactForm" data-form-action="contact">
+<p class="required-note"><span class="required-marker" aria-hidden="true">*</span> Required fields</p>
             <div class="form-row">
               <div class="form-group">
-                <label for="firstName"> First Name * </label>
+                <label for="firstName">First Name <span class="required-marker" aria-hidden="true">*</span></label>
 
                 <input
                   class="form-control"
@@ -187,11 +188,11 @@
                   id="firstName"
                   name="firstName"
                   required
-                / maxlength="100">
+                maxlength="100">
               </div>
 
               <div class="form-group">
-                <label for="lastName"> Last Name * </label>
+                <label for="lastName">Last Name <span class="required-marker" aria-hidden="true">*</span></label>
 
                 <input
                   class="form-control"
@@ -199,13 +200,13 @@
                   id="lastName"
                   name="lastName"
                   required
-                / maxlength="100">
+                maxlength="100">
               </div>
             </div>
 
             <div class="form-row">
               <div class="form-group">
-                <label for="email"> Email * </label>
+                <label for="email">Email <span class="required-marker" aria-hidden="true">*</span></label>
 
                 <input
                   class="form-control"
@@ -213,7 +214,7 @@
                   id="email"
                   name="email"
                   required
-                / maxlength="254">
+                maxlength="254">
               </div>
 
               <div class="form-group">
@@ -224,7 +225,7 @@
                   type="text"
                   id="company"
                   name="company"
-                / maxlength="200">
+                maxlength="200">
               </div>
             </div>
 
@@ -245,7 +246,7 @@
             </div>
 
             <div class="form-group">
-              <label for="message"> Message * </label>
+              <label for="message">Message <span class="required-marker" aria-hidden="true">*</span></label>
 
               <textarea
                 class="form-control"

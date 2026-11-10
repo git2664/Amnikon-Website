@@ -44,6 +44,24 @@
 .service-detail-page .service-faq-item[open] .service-faq-toggle {background:var(--detail-accent);color:#071220;}
 .service-detail-page .service-faq-answer {padding:0 24px 24px;}
 .service-detail-page .service-faq-answer p {color:#bac9df;}
+/* Keep FAQ text visually centered while the expand control stays on the right. */
+.service-detail-page .service-faq-question {
+  position: relative;
+  justify-content: center;
+  padding-inline: 68px;
+  text-align: center;
+}
+.service-detail-page .service-faq-question > span:first-child {
+  flex: 1;
+  text-align: center;
+}
+.service-detail-page .service-faq-toggle {
+  position: absolute;
+  right: 24px;
+}
+.service-detail-page .service-faq-answer p {
+  text-align: center;
+}
 .detail-related h2 {margin-bottom:30px;}
 .detail-related-grid {display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:20px;}
 .detail-related a {display:flex;justify-content:space-between;align-items:center;gap:18px;padding:24px;border:1px solid var(--border);border-radius:12px;background:#111b30;font-weight:600;}
@@ -56,6 +74,10 @@
 @media(max-width:1100px) { .detail-hero-grid{gap:35px;} .detail-grid{grid-template-columns:repeat(2,minmax(0,1fr));} }
 @media(max-width:800px) { .detail-hero{padding:145px 0 64px;} .detail-hero-grid{grid-template-columns:1fr;gap:45px;} .detail-visual{max-width:600px;} .detail-use-grid,.detail-related-grid{grid-template-columns:1fr;} .detail-process{grid-template-columns:repeat(2,minmax(0,1fr));} .detail-outcomes li{font-size:.9rem;padding:22px 10px;} }
 @media(max-width:480px) { .detail-hero{padding-top:125px;} .detail-hero h1{font-size:2.35rem;} .detail-grid,.detail-process{grid-template-columns:1fr;} .detail-visual{padding:24px 20px;} .detail-actions{flex-direction:column;align-items:stretch;} .detail-actions a{text-align:center;} .detail-outcomes ul{grid-template-columns:1fr;} .detail-outcomes li+li{border-left:0;border-top:1px solid var(--border);} .detail-card{padding:26px;} .service-detail-page .service-faq-question{padding:18px;gap:12px;} .service-detail-page .service-faq-answer{padding:0 18px 20px;} }
+@media(max-width:480px) {
+  .service-detail-page .service-faq-question { padding-inline: 54px; }
+  .service-detail-page .service-faq-toggle { right: 14px; }
+}
 
 /* Distinct service identities, scoped to these four pages. */
 .service-detail-page[data-service-theme="digital-services"] {

@@ -80,24 +80,24 @@
     </section>
 
     <!-- ── PERKS ── -->
-    <section class="benefits-section">
+    <section class="benefits-section" id="culture">
       <div class="benefits-layout">
         <!-- LEFT STICKY -->
         <div class="benefits-sidebar">
           <div class="sidebar-line"></div>
           <div class="sidebar-progress"></div>
 
-          <div class="benefit-link active" data-target="0">Career Growth</div>
+          <button type="button" class="benefit-link active" data-target="0">Career Growth</button>
 
-          <div class="benefit-link" data-target="1">
+          <button type="button" class="benefit-link" data-target="1">
             Learning & Certifications
-          </div>
+          </button>
 
-          <div class="benefit-link" data-target="2">Flexible Work</div>
+          <button type="button" class="benefit-link" data-target="2">Flexible Work</button>
 
-          <div class="benefit-link" data-target="3">Modern Technologies</div>
+          <button type="button" class="benefit-link" data-target="3">Modern Technologies</button>
 
-          <div class="benefit-link" data-target="4">Recognition & Rewards</div>
+          <button type="button" class="benefit-link" data-target="4">Recognition & Rewards</button>
         </div>
 
         <!-- RIGHT SCROLLING -->
@@ -251,8 +251,8 @@
     <section class="careers-openings" id="openings">
       <div class="openings-header">
         <span class="section-label"> CURRENT OPPORTUNITIES </span>
-        <h2>No Current Vacancies</h2>
-        <p>We are not recruiting for any specific positions at the moment. You are welcome to share your resume below for consideration when a suitable opportunity becomes available.</p>
+        <h2>Stay Connected for Future Opportunities</h2>
+        <p>We don’t have any open roles right now, but we’d still like to hear from you. Share your experience and areas of interest for future consideration. Our HR team may contact you if a suitable role becomes available and your profile is shortlisted.</p>
       </div>
     </section>
 
@@ -280,10 +280,11 @@
         <div class="resume-card">
 
             <form id="resume-form" data-form-action="careers">
+<p class="required-note"><span class="required-marker" aria-hidden="true">*</span> Required fields</p>
 
                 <div class="input-group">
 
-                    <label for="resume-FullName">Full Name</label>
+                    <label for="resume-FullName">Full Name <span class="required-marker" aria-hidden="true">*</span></label>
 
                     <input
     type="text"
@@ -295,7 +296,7 @@
 
                 <div class="input-group">
 
-                    <label for="resume-Email">Email Address</label>
+                    <label for="resume-Email">Email Address <span class="required-marker" aria-hidden="true">*</span></label>
 
                  <input
     type="email"
@@ -318,7 +319,7 @@
                 </div>
 
                 <div class="upload-box">
- <label for="resume-file">Resume (PDF, DOC or DOCX, up to 5 MB) *</label>
+ <label for="resume-file">Resume (PDF, DOC or DOCX, up to 5 MB) <span class="required-marker" aria-hidden="true">*</span></label>
 
                    <input
     type="file"

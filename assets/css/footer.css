@@ -1286,3 +1286,10 @@
   .site-footer .footer-cta-content>div:first-child {flex:none;}
   .site-footer .footer-cta h2 {font-size:clamp(1.8rem,4.5vw,2.8rem);}
 }
+
+/* Consistent feedback, including links that wrap across two lines. */
+.site-footer .footer-col a { display:inline-block; max-width:100%; border-radius:4px; transition:color .2s ease,transform .2s ease,text-shadow .2s ease; text-underline-offset:5px; }
+.site-footer .footer-col a:hover,.site-footer .footer-col a:focus-visible { color:#8deaff; transform:translateX(4px); text-decoration:underline; text-shadow:0 0 16px rgba(56,189,248,.5); }
+.site-footer .footer-col a:focus-visible {outline:2px solid #7dd3fc;outline-offset:5px;}
+.site-footer .map-link {font-size:.9rem;line-height:1.6;}
+@media(prefers-reduced-motion:reduce) {.site-footer .footer-col a {transition:none;transform:none;}}

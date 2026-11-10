@@ -80,8 +80,17 @@ document.addEventListener("DOMContentLoaded", () => {
                 if (response.ok && (result.success === true || result.Success === true)) {
 
                     successMessage.hidden = false;
-                    successMessage.textContent = "Thank you! Your message has been received. We'll be in touch within 3 business days." +
-                        (result.submissionId ? " Reference: " + result.submissionId + "." : "");
+                    successMessage.replaceChildren();
+            const heading = document.createElement("strong");
+            heading.textContent = "Message received";
+            const message = document.createElement("p");
+            message.textContent = "Thank you for contacting AMNIKON. Our team will review your enquiry and get back to you within 3 business days.";
+            successMessage.append(heading, message);
+            if (result.submissionId) {
+                const receipt = document.createElement("small");
+                receipt.textContent = "Your enquiry reference: " + result.submissionId;
+                successMessage.append(receipt);
+            }
 
                     form.reset();
                     AmnikonApi.completeSubmission("contact");

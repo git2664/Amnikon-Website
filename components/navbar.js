@@ -61,7 +61,7 @@
         Request a Consultation
     </a>
 
-    <a href="/pages/contact/contact.html" class="btn btn-primary">
+    <a href="/pages/contact/contact.html#contact-form-section" class="btn btn-primary">
         General Enquiries
     </a>
 
@@ -71,7 +71,7 @@
 
     <div class="nav-actions">
       <a href="/pages/support/support.html" class="btn btn-support">Request a Consultation</a>
-      <a href="/pages/contact/contact.html" class="btn btn-primary">General Enquiries</a>
+      <a href="/pages/contact/contact.html#contact-form-section" class="btn btn-primary">General Enquiries</a>
     </div>
 
 

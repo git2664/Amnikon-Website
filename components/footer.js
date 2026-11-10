@@ -168,10 +168,10 @@
                                 Main Branch
                             </h5>
 
-                            <p class="info-address">
+                            <a class="info-address map-link" href="https://www.google.com/maps/search/?api=1&amp;query=Building%20A1%2C%20Dubai%20Silicon%20Oasis%2C%20Dubai%2C%20United%20Arab%20Emirates" target="_blank" rel="noopener noreferrer" aria-label="Open Building A1, Dubai Silicon Oasis, Dubai, United Arab Emirates in Google Maps">
                                 Building A1, Dubai Silicon Oasis,
                                 Dubai, United Arab Emirates
-                            </p>
+                             <span aria-hidden="true">↗</span></a>
 
                         </li>
 
@@ -184,9 +184,9 @@
                                 Branch
                             </h5>
 
-                            <p class="info-address">
+                            <a class="info-address map-link" href="https://www.google.com/maps/search/?api=1&amp;query=Arihant%20Aura%20Thane%20-%20Belapur%20Rd%2C%20Turbhe%20MIDC%2C%20Navi%20Mumbai" target="_blank" rel="noopener noreferrer" aria-label="Open Arihant Aura Thane - Belapur Rd, Turbhe MIDC, Navi Mumbai in Google Maps">
                                 Arihant Aura Thane - Belapur Rd, Turbhe MIDC, Navi Mumbai
-                            </p>
+                             <span aria-hidden="true">↗</span></a>
 
                         </li>
 

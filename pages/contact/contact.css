@@ -1324,3 +1324,16 @@ textarea {
   #contactForm .form-row {grid-template-columns:minmax(0,1fr);gap:24px;}
   #contactForm #submitBtn {align-self:stretch;justify-content:center;}
 }
+
+.form-success:not([hidden]) {display:block;margin-top:24px;padding:24px;border:1px solid #4bd8d1;border-left:4px solid #4bd8d1;border-radius:12px;background:#122e3b;color:#e8f5ff;}
+.form-success strong {display:block;font-size:1.2rem;margin-bottom:8px;}
+.form-success p {margin:0 0 12px;line-height:1.6;}
+.form-success small {display:block;color:#afc9df;overflow-wrap:anywhere;}
+.office-map-link {color:#b9dfff;text-underline-offset:5px;}
+.office-map-link span {display:inline-block;margin-top:12px;color:#6ee7f0;}
+.office-map-link:hover,.office-map-link:focus-visible {color:white;text-decoration:underline;}
+
+/* Keep the enquiry form heading clear of the fixed navigation. */
+#contact-form-section {
+  scroll-margin-top: 128px;
+}

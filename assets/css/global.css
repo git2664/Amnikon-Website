@@ -388,3 +388,137 @@ main { scroll-margin-top: 130px; }
 .service-faq-question > .service-faq-toggle { flex: 0 0 auto; aspect-ratio: 1; }
 .service-faq-toggle::before { content: '+'; }
 .service-faq-item[open] .service-faq-toggle::before { content: '−'; }
+
+/* Form requirements and shared section accents. */
+.required-marker { color:#ff8585 !important; font-weight:800; }
+.required-note { font-size:.875rem; color:#b9c7db; margin:0 0 20px; }
+.eyebrow,.hero-label { transition:box-shadow .2s ease,transform .2s ease,border-color .2s ease; }
+.eyebrow:hover,.hero-label:hover { transform:translateY(-3px); box-shadow:0 0 25px rgba(56,189,248,.35); }
+@media(prefers-reduced-motion:reduce) { .eyebrow,.hero-label {transition:none;transform:none;} }
+/* Consistent alignment across the eight individual service pages. */
+body:is(.legacy-service-page,.service-detail-page) main {
+  overflow-x: clip;
+}
+body:is(.legacy-service-page,.service-detail-page) main :is(h1,h2,h3,h4,p,li) {
+  overflow-wrap: break-word;
+}
+body.legacy-service-page main :is(.section,.stats-section,.stats-band,.solutions-section,.framework-section,.vcio-section,.threat-section,.tech-stack,.process-section,.service-faq) {
+  box-sizing: border-box;
+  width: min(1200px, calc(100% - 48px));
+  max-width: 1200px;
+  margin-inline: auto;
+}
+body.legacy-service-page main :is(.services-grid,.stats-grid,.solutions-grid,.framework-grid,.tech-stack-grid,.process-grid) {
+  align-items: stretch;
+}
+body.legacy-service-page main :is(.svc-card,.stat-card,.solution-card,.framework-card,.tech-card,.process-card,.threat-card) {
+  box-sizing: border-box;
+  min-width: 0;
+  height: 100%;
+}
+body.service-detail-page main :is(.detail-hero-grid,.detail-grid,.detail-use-grid,.detail-process,.detail-related-grid) {
+  align-items: stretch;
+}
+body.service-detail-page main :is(.detail-card,.detail-use,.detail-visual,.detail-related a) {
+  box-sizing: border-box;
+  min-width: 0;
+  height: 100%;
+}
+body.service-detail-page main .detail-hero-grid > * {
+  min-width: 0;
+}
+@media (max-width: 760px) {
+  body.legacy-service-page main :is(.section,.stats-section,.stats-band,.solutions-section,.framework-section,.vcio-section,.threat-section,.tech-stack,.process-section,.service-faq) {
+    width: calc(100% - 32px);
+  }
+}
+/* Page alignment: center section introductions without changing card copy. */
+main :is(.section-header, .section-label, .detail-heading, .openings-header) {
+  box-sizing: border-box;
+  width: min(100%, 850px);
+  margin-inline: auto;
+  text-align: center !important;
+}
+main :is(.section-header, .section-label, .detail-heading, .openings-header) :is(h2, p) {
+  margin-inline: auto;
+  text-align: center !important;
+}
+main :is(.about-hero-content, .careers-hero-content, .contact-hero-content, .page-hero-content) {
+  margin-inline: auto;
+  text-align: center;
+}
+main :is(.about-hero-content, .careers-hero-content, .contact-hero-content, .page-hero-content) > p {
+  margin-inline: auto;
+}
+main :is(.hero-content, .hero-text, .detail-hero-grid > div:first-child) {
+  text-align: center !important;
+}
+main :is(.hero-content, .hero-text, .detail-hero-grid > div:first-child) > p {
+  margin-inline: auto;
+}
+main :is(.hero-actions, .detail-actions) {
+  justify-content: center;
+}
+main :is(.btn-row, .hero-buttons) {
+  justify-content: center;
+}
+/* Preserve readable labels, content cards, FAQs, and legal documents. */
+main :is(form, .benefit-panel, .detail-card, .svc-card, .service-faq-item, .legal-content) {
+  text-align: left;
+}
+/* Align FAQ rows consistently on every individual service page. */
+body:is(.legacy-service-page,.service-detail-page) main .service-faq > .container {
+  width: min(100%, 1100px);
+  margin-inline: auto;
+}
+body:is(.legacy-service-page,.service-detail-page) main .service-faq :is(.section-header,.detail-heading) {
+  width: min(100%, 850px);
+  margin-inline: auto;
+  text-align: center !important;
+}
+body:is(.legacy-service-page,.service-detail-page) main .service-faq :is(.section-header,.detail-heading) :is(h2,p) {
+  text-align: center !important;
+  margin-inline: auto;
+}
+body:is(.legacy-service-page,.service-detail-page) main .service-faq :is(.detail-faq-list,.service-faq-item) {
+  max-width: 960px;
+  margin-inline: auto;
+}
+body:is(.legacy-service-page,.service-detail-page) main .service-faq .service-faq-question {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center !important;
+  min-height: 72px;
+  padding: 18px 64px !important;
+  text-align: center !important;
+}
+body:is(.legacy-service-page,.service-detail-page) main .service-faq .service-faq-question > span:first-child:not(.service-faq-toggle) {
+  flex: 1;
+  text-align: center !important;
+}
+body:is(.legacy-service-page,.service-detail-page) main .service-faq .service-faq-toggle {
+  position: absolute;
+  right: 20px;
+  top: 50%;
+  transform: translateY(-50%);
+  flex-shrink: 0;
+}
+body.legacy-service-page main .service-faq .service-faq-item[open] .service-faq-toggle {
+  transform: translateY(-50%) rotate(180deg);
+}
+body:is(.legacy-service-page,.service-detail-page) main .service-faq .service-faq-answer {
+  text-align: center !important;
+}
+body:is(.legacy-service-page,.service-detail-page) main .service-faq .service-faq-answer p {
+  text-align: center !important;
+  margin-inline: auto;
+}
+@media (max-width: 480px) {
+  body:is(.legacy-service-page,.service-detail-page) main .service-faq .service-faq-question {
+    padding-inline: 52px !important;
+  }
+  body:is(.legacy-service-page,.service-detail-page) main .service-faq .service-faq-toggle {
+    right: 12px;
+  }
+}

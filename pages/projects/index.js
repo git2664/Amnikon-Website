@@ -11,6 +11,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const step = () => cards.length > 1 ? cards[1].offsetLeft - cards[0].offsetLeft : track.clientWidth;
     function move(left) { track.scrollTo({left, behavior:motion.matches ? 'auto' : 'smooth'}); }
     function update() {
+      const cardHeight = cards[0]?.getBoundingClientRect().height || 0;
+      if (cardHeight) controls.style.setProperty('--case-control-y', `${Math.max(0, cardHeight / 2 - 23)}px`);
       const max = Math.max(0, track.scrollWidth - track.clientWidth);
       previous.disabled = track.scrollLeft <= 2;
       next.disabled = track.scrollLeft >= max - 2;
@@ -52,7 +54,11 @@ document.addEventListener('DOMContentLoaded', () => {
     track.addEventListener('pointerleave', () => {if (drag && !drag.active) drag = null;});
     track.querySelectorAll('img').forEach(image => {image.draggable = false;});
     window.addEventListener('resize', update);
-    if ('ResizeObserver' in window) new ResizeObserver(update).observe(track);
+    if ('ResizeObserver' in window) {
+      const observer = new ResizeObserver(update);
+      observer.observe(track);
+      cards.forEach(card => observer.observe(card));
+    }
     update();
   }
   const modal = document.querySelector('.project-modal');
@@ -64,7 +70,13 @@ document.addEventListener('DOMContentLoaded', () => {
       const data = button.dataset;
       document.getElementById('modal-title').textContent = data.title || '';
       const image = document.getElementById('modal-image');
-      image.src = data.image || '';
+      if (data.image) {
+        image.src = data.image;
+        image.hidden = false;
+      } else {
+        image.removeAttribute('src');
+        image.hidden = true;
+      }
       image.alt = data.title || 'Project illustration';
       document.getElementById('modal-description').textContent = data.description || '';
       ['challenge','solution','outcome','source'].forEach(key => {

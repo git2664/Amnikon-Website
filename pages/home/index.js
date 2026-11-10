@@ -12,25 +12,30 @@
       sequence.classList.add('is-animated');
       gsap.set(cards, { opacity: 0, y: 60, force3D: false });
       gsap.set(shade, { opacity: 0 });
-      const imageRun = 1200, cardRun = 550;
-      const timeline = gsap.timeline({
-        scrollTrigger: {
-          id: 'home-image-and-cards', trigger: sequence, start: 'top top',
-          end: () => '+=' + (imageRun + cards.length * cardRun),
-          pin: stage, scrub: 1.2, anticipatePin: 1, invalidateOnRefresh: true
-        }
-      });
-      // Explicit start/end measurements survive refreshes and browser zoom changes.
-      timeline.fromTo(frame, {
+      const imageRun = 160, cardRun = 550;
+      // Enlarge the image as this section enters, before the pinned tiles begin.
+      gsap.fromTo(frame, {
         width: () => Math.min(700, Math.max(500, stage.clientWidth * 0.38)),
         height: () => Math.min(420, Math.max(310, stage.clientWidth * 0.24)),
         borderRadius: 24
       }, {
         width: () => stage.clientWidth,
         height: () => stage.clientHeight,
-        borderRadius: 0, duration: 1100, ease: 'power2.inOut'
-      }, 0)
-        .to({}, { duration: 100 }, 1100)
+        borderRadius: 0, ease: 'none',
+        scrollTrigger: {
+          id: 'home-image-entry-zoom', trigger: sequence,
+          start: 'top bottom', end: 'top top', scrub: .8,
+          invalidateOnRefresh: true
+        }
+      });
+      const timeline = gsap.timeline({
+        scrollTrigger: {
+          id: 'home-image-and-cards', trigger: sequence, start: 'top top',
+          end: () => '+=' + (imageRun + cards.length * cardRun),
+          pin: stage, scrub: .5, anticipatePin: 1, invalidateOnRefresh: true
+        }
+      });
+      timeline.to({}, { duration: imageRun }, 0)
         .to(shade, { opacity: 0.2, duration: 200, ease: 'none' }, imageRun);
       cards.forEach((card, index) => {
         const start = imageRun + index * cardRun;
