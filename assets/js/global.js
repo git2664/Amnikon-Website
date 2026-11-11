@@ -234,8 +234,8 @@ document.addEventListener('DOMContentLoaded', () => {
     return msg;
   }
 
-  const commonWords = new Set('a an and are as at be can could do does for from have how i in is it me my of on or our please the to us we what when where which who why with you your'.split(' '));
-  const aliases = { jobs: 'careers', job: 'careers', openings: 'vacancies', vacancy: 'vacancies', cv: 'resume', resumes: 'resume', cybersecurity: 'security', emails: 'email' };
+  const commonWords = new Set('a an and are as at available be can could do does for from have how i in is it me my of offer offere offered offering offers on or our please provide provides the to us we what when where which who why with you your'.split(' '));
+  const aliases = { jobs: 'careers', job: 'careers', openings: 'vacancies', vacancy: 'vacancies', cv: 'resume', resumes: 'resume', cybersecurity: 'security', emails: 'email', projects: 'project', services: 'service' };
   const terms = value => (String(value).toLowerCase().match(/[a-z0-9]+/g) || [])
     .filter(word => word.length > 2 && !commonWords.has(word))
     .map(word => aliases[word] || word);
@@ -259,13 +259,18 @@ document.addEventListener('DOMContentLoaded', () => {
           if (!main) return [];
           const title = clean(page.title.replace(/^AMNIKON TECHNOLOGIES\s*\|\s*/i, ''));
           let heading = title;
-          return [...main.querySelectorAll('h1, h2, h3, p, li')].flatMap(node => {
+          const entries = [...main.querySelectorAll('h1, h2, h3, p, li')].flatMap(node => {
             if (node.closest('nav, form, footer, [hidden], [aria-hidden="true"]')) return [];
             const value = clean(node.textContent);
             if (/^H[1-3]$/.test(node.tagName)) { heading = value || heading; return []; }
             if (value.length < 35 || value.length > 1000) return [];
             return [{ path, title, heading, text: value.slice(0, 420) }];
           });
+          if (path === '/pages/projects/index.html') {
+            const names = [...main.querySelectorAll('.case-card h3')].map(node => clean(node.textContent));
+            if (names.length) entries.unshift({ path, title, heading: 'Projects', text: `Our featured projects include ${names.join(', ')}.` });
+          }
+          return entries;
         } catch { return []; }
       }));
       return pages.flat();
@@ -277,6 +282,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const query = [...new Set(terms(question))];
     if (!query.length) return null;
     const entries = await siteIndex();
+    if (query.length === 1 && query[0] === 'project') {
+      const summary = entries.find(entry => entry.path === '/pages/projects/index.html' && entry.heading === 'Projects');
+      if (summary) return summary;
+    }
     let best = null;
     for (const entry of entries) {
       const body = entry.text.toLowerCase();
