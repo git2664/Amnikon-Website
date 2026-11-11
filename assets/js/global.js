@@ -259,6 +259,10 @@ document.addEventListener('DOMContentLoaded', () => {
   }
   chatToggle?.addEventListener('click', () => setChat(chatWindow.hidden));
   document.getElementById('chatbot-close')?.addEventListener('click', () => setChat(false, true));
+  document.addEventListener('pointerdown', e => {
+    if (chatWindow?.hidden || chatWindow?.contains(e.target) || chatToggle?.contains(e.target)) return;
+    setChat(false);
+  });
   chatWindow?.addEventListener('keydown', e => {
     if (e.key === 'Escape') { e.preventDefault(); setChat(false, true); }
   });
