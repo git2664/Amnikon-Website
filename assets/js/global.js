@@ -217,34 +217,115 @@ document.addEventListener('DOMContentLoaded', () => {
   const chatSend    = document.getElementById('chatbot-send');
   const chatMsgs    = document.getElementById('chatbot-messages');
 
-  function addMessage(text, type = 'bot') {
+  function addMessage(text, type = 'bot', link) {
     if (!chatMsgs) return;
     const msg = document.createElement('div');
     msg.className = `chat-msg ${type}`;
     msg.textContent = text;
+    if (link) {
+      const more = document.createElement('a');
+      more.href = link;
+      more.textContent = link === '/pages/support/support.html' ? 'Request a Consultation' : 'Read more';
+      msg.appendChild(document.createElement('br'));
+      msg.appendChild(more);
+    }
     chatMsgs.appendChild(msg);
     chatMsgs.scrollTop = chatMsgs.scrollHeight;
+    return msg;
   }
 
-  const botReplies = [
-    "For a reply from our team, choose Request a Consultation above and send an enquiry.",
-    "You can email info@amnikontechnologies.com to discuss your requirements.",
-    "Our Request a Consultation form lets you tell us about your business and what you need.",
-    "We specialize in Managed IT, Cybersecurity, and Cloud Solutions. Which interests you?",
-    "Choose Request a Consultation above to discuss a project or ask about our services."
-  ];
+  const commonWords = new Set('a an and are as at be can could do does for from have how i in is it me my of on or our please the to us we what when where which who why with you your'.split(' '));
+  const aliases = { jobs: 'careers', job: 'careers', openings: 'vacancies', vacancy: 'vacancies', cv: 'resume', resumes: 'resume', cybersecurity: 'security', emails: 'email' };
+  const terms = value => (String(value).toLowerCase().match(/[a-z0-9]+/g) || [])
+    .filter(word => word.length > 2 && !commonWords.has(word))
+    .map(word => aliases[word] || word);
+  const clean = value => String(value || '').replace(/\s+/g, ' ').trim();
+  let siteIndexPromise;
 
-  let replyIndex = 0;
+  async function siteIndex() {
+    if (!siteIndexPromise) siteIndexPromise = (async () => {
+      const response = await fetch('/sitemap.xml');
+      if (!response.ok) throw new Error('Sitemap unavailable');
+      const sitemap = new DOMParser().parseFromString(await response.text(), 'application/xml');
+      const paths = [...sitemap.querySelectorAll('url > loc')]
+        .map(node => new URL(node.textContent).pathname)
+        .filter(path => path.startsWith('/pages/') && path.endsWith('.html'));
+      const pages = await Promise.all(paths.map(async path => {
+        try {
+          const pageResponse = await fetch(path);
+          if (!pageResponse.ok) return [];
+          const page = new DOMParser().parseFromString(await pageResponse.text(), 'text/html');
+          const main = page.querySelector('main');
+          if (!main) return [];
+          const title = clean(page.title.replace(/^AMNIKON TECHNOLOGIES\s*\|\s*/i, ''));
+          let heading = title;
+          return [...main.querySelectorAll('h1, h2, h3, p, li')].flatMap(node => {
+            if (node.closest('nav, form, footer, [hidden], [aria-hidden="true"]')) return [];
+            const value = clean(node.textContent);
+            if (/^H[1-3]$/.test(node.tagName)) { heading = value || heading; return []; }
+            if (value.length < 35 || value.length > 1000) return [];
+            return [{ path, title, heading, text: value.slice(0, 420) }];
+          });
+        } catch { return []; }
+      }));
+      return pages.flat();
+    })();
+    return siteIndexPromise;
+  }
 
-  function sendMessage() {
+  async function answerFromSite(question) {
+    const query = [...new Set(terms(question))];
+    if (!query.length) return null;
+    const entries = await siteIndex();
+    let best = null;
+    for (const entry of entries) {
+      const body = entry.text.toLowerCase();
+      const heading = entry.heading.toLowerCase();
+      const title = entry.title.toLowerCase();
+      const matched = query.filter(word => body.includes(word) || heading.includes(word) || title.includes(word));
+      if (matched.length < Math.min(2, query.length)) continue;
+      const score = matched.length * 4 + query.reduce((sum, word) => sum +
+        (body.includes(word) ? 2 : 0) + (heading.includes(word) ? 3 : 0) + (title.includes(word) ? 2 : 0), 0);
+      if (!best || score > best.score) best = { ...entry, score };
+    }
+    return best;
+  }
+
+  async function sendMessage() {
     const text = chatInput?.value.trim();
-    if (!text) return;
+    if (!text || chatSend.disabled) return;
     addMessage(text, 'user');
     chatInput.value = '';
-    setTimeout(() => {
-      addMessage(botReplies[replyIndex % botReplies.length]);
-      replyIndex++;
-    }, 800);
+    chatSend.disabled = true;
+    const pending = addMessage('Searching our website…');
+    try {
+      const result = await answerFromSite(text);
+      if (result) {
+        pending.textContent = `From ${result.heading}: ${result.text}`;
+        const link = document.createElement('a');
+        link.href = result.path;
+        link.textContent = 'Read more';
+        pending.appendChild(document.createElement('br'));
+        pending.appendChild(link);
+      } else {
+        pending.textContent = 'I could not find an answer on our website. Please contact us for more information.';
+        const link = document.createElement('a');
+        link.href = '/pages/support/support.html';
+        link.textContent = 'Request a Consultation';
+        pending.appendChild(document.createElement('br'));
+        pending.appendChild(link);
+      }
+    } catch {
+      pending.textContent = 'I could not search the website right now. Please contact us for more information.';
+      const link = document.createElement('a');
+      link.href = '/pages/support/support.html';
+      link.textContent = 'Request a Consultation';
+      pending.appendChild(document.createElement('br'));
+      pending.appendChild(link);
+    } finally {
+      chatSend.disabled = false;
+      chatMsgs.scrollTop = chatMsgs.scrollHeight;
+    }
   }
 
   function setChat(open, restore = false) {

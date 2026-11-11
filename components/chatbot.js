@@ -29,7 +29,7 @@
 
     <div class="chatbot-messages" id="chatbot-messages" role="log" aria-live="polite" aria-relevant="additions" aria-label="Automated conversation">
       <div class="chat-msg bot">👋 Hi! How can we help you today?</div>
-      <div class="chat-msg bot">Explore our services, or use Request a Consultation to send an enquiry to our team. Messages here are automated and are not sent to our team.</div>
+      <div class="chat-msg bot">Ask me about information on this website. I will show the relevant page, or help you contact our team if I cannot find an answer. Messages here are automated and are not sent to our team.</div>
     </div>
 
     <div class="chatbot-input">
