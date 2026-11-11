@@ -8,7 +8,7 @@
 
   <div id="chatbot-window" hidden role="dialog" aria-label="AMNIKON automated assistant">
     <div class="chatbot-header">
-      <div class="chatbot-header-icon">💬</div>
+      <div class="chatbot-header-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 11.5a7.5 7.5 0 0 1-7.5 7.5H6l-3 2 1-4.5A7.5 7.5 0 1 1 20 11.5Z"/><path d="M8 11h8M8 14h5"/></svg></div>
       <div class="chatbot-header-info">
         <h5>AMNIKON Assistant</h5>
         <span><span class="chatbot-status-dot"></span>Automated guide</span>
@@ -18,11 +18,11 @@
 
     <nav class="chatbot-nav">
       <a href="/pages/support/support.html">
-        <span>💬</span>
+        <span class="chatbot-nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="3.5"/><path d="M5 20a7 7 0 0 1 14 0M19 7v4m2-2h-4"/></svg></span>
         <span>Request a Consultation</span>
       </a>
       <a href="mailto:info@amnikontechnologies.com">
-        <span>✉️</span>
+        <span class="chatbot-nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m4 7 8 6 8-6"/></svg></span>
         <span>Email</span>
       </a>
     </nav>

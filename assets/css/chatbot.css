@@ -384,6 +384,8 @@
     pointer-events: none;
 }
 
+.chatbot-header-icon svg { width:20px; height:20px; display:block; color:#fff; }
+
 
 /* ============================================================
    HEADER INFO
@@ -515,6 +517,9 @@
 
     pointer-events: none;
 }
+
+.chatbot-nav a .chatbot-nav-icon { display:grid; place-items:center; min-height:22px; margin-bottom:7px; color:#c5ddff; }
+.chatbot-nav .chatbot-nav-icon svg { display:block; width:20px; height:20px; }
 
 
 /* ============================================================
