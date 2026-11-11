@@ -1580,24 +1580,22 @@ RESUME SECTION
 #culture .benefit-link:focus-visible {outline:2px solid #7dd3fc;outline-offset:4px;}
 @media(max-width:850px) {#culture .benefit-panel {padding:24px 0;}}
 
-/* Match the original Careers sidebar: fixed left navigation, scrolling right content. */
+/* Culture topics behave as tabs, with no scroll-driven panels or blank viewport space. */
 #culture {margin-top:0;overflow:visible;}
 #culture .benefits-layout {align-items:start;}
-#culture .benefits-sidebar {align-self:start;top:130px;gap:16px;padding-left:28px;}
-#culture .sidebar-line {display:block;position:absolute;left:0;top:0;width:2px;height:100%;background:#ffffff26;}
-#culture .sidebar-progress {display:block;position:absolute;left:0;width:2px;background:#56d9f0;transition:top .25s ease,height .25s ease;pointer-events:none;}
-#culture .benefit-link {border:0;padding:16px 12px;text-align:left;font-size:clamp(1rem,1.5vw,1.35rem);}
-#culture .benefits-content {gap:48px;}
-#culture .benefit-panel {padding:16px 0 32px;min-height:calc(100svh - 190px);scroll-margin-top:130px;}
+#culture .benefits-sidebar {position:static;align-self:start;gap:12px;padding-left:0;}
+#culture .sidebar-line,#culture .sidebar-progress {display:none;}
+#culture .benefit-link {width:100%;padding:16px 12px;text-align:left;font-size:clamp(1rem,1.5vw,1.35rem);}
+#culture .benefits-content {gap:0;}
+#culture .benefit-panel {padding:16px 0 32px;min-height:0;height:auto;scroll-margin-top:0;}
+#culture .benefit-panel[hidden] {display:none;}
 #culture .benefit-points {margin-top:20px;}
 @media(max-width:850px) {
- #culture .benefits-sidebar {position:static;padding-left:0;gap:8px;}
- #culture .sidebar-line,#culture .sidebar-progress {display:none;}
+ #culture .benefits-sidebar {display:grid;grid-template-columns:repeat(2,minmax(0,1fr));padding-left:0;gap:8px;}
  #culture .benefit-link {border-left:2px solid #334155;font-size:.95rem;padding:12px;}
  #culture .benefit-link.active {border-left-color:#56d9f0;}
  #culture .benefit-panel {min-height:0;padding:16px 0 24px;}
 }
-@media(prefers-reduced-motion:reduce) {#culture .sidebar-progress {transition:none;}}
 
 /* Keep the resume upload within the Careers form on narrow screens. */
 .resume-container,
