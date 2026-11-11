@@ -43,12 +43,12 @@
                 <div class="footer-cta-actions">
 
                     <a href="/pages/contact/contact.html"
-                       class="btn btn-primary">
+                       class="footer-action footer-action-primary">
                         General Enquiries
                     </a>
 
                     <a href="/pages/support/support.html"
-                       class="btn btn-outline">
+                       class="footer-action footer-action-secondary">
                         Request a Consultation
                     </a>
 
