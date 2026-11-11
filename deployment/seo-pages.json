@@ -98,17 +98,17 @@
     },
     {
       "file": "pages/legal/privacy.html",
-      "title": "AMNIKON TECHNOLOGIES | Privacy Policy — Draft",
-      "description": "Draft AMNIKON Technologies Privacy Policy, pending review and approval.",
+      "title": "AMNIKON TECHNOLOGIES | Privacy Policy",
+      "description": "Learn how AMNIKON uses information submitted through this website, including enquiries and resumes, and how to make a privacy request.",
       "type": "WebPage",
-      "indexable": false
+      "indexable": true
     },
     {
       "file": "pages/legal/terms.html",
-      "title": "AMNIKON TECHNOLOGIES | Terms of Service — Draft",
-      "description": "Draft AMNIKON Technologies Terms of Service, pending review and approval.",
+      "title": "AMNIKON TECHNOLOGIES | Website Terms",
+      "description": "Terms for using the AMNIKON Technologies website, including enquiries, future-opportunity resumes, and responsible use.",
       "type": "WebPage",
-      "indexable": false
+      "indexable": true
     },
     {
       "file": "pages/services/digital-services.html",

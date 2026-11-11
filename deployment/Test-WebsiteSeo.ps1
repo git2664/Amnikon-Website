@@ -27,7 +27,7 @@ foreach($page in $config.pages){
     if($page.indexable){
         if(!$head.Contains('name="robots" content="index, follow"')){throw 'Public page accidentally noindexed.'}
         $expected+=$canonical
-    }elseif(!$head.Contains('name="robots" content="noindex, follow"')){throw 'Draft policy must stay noindex.'}
+    }elseif(!$head.Contains('name="robots" content="noindex, follow"')){throw 'A non-indexable page must remain excluded from search.'}
 }
 [xml]$sitemap=Get-Content (Join-Path $ProjectRoot 'sitemap.xml') -Raw
 if($sitemap.DocumentElement.NamespaceURI -ne 'http://www.sitemaps.org/schemas/sitemap/0.9'){throw 'Invalid sitemap namespace.'}
@@ -41,4 +41,4 @@ if(!$robots.Contains('Sitemap: '+$origin+'/sitemap.xml') -or $robots -match '(?m
 $homeCanonical=$origin+'/'+$config.home
 $entry=Get-Content (Join-Path $ProjectRoot 'index.html') -Raw
 if(!$entry.Contains('rel="canonical" href="'+$homeCanonical+'"')){throw 'Root redirect canonical mismatch.'}
-Write-Output ('PASS: '+$config.pages.Count+' metadata/structured-data pages, '+$expected.Count+' sitemap URLs, draft exclusions, no vacancy markup, logo casing and discovery allowlists.')
+Write-Output ('PASS: '+$config.pages.Count+' metadata/structured-data pages, '+$expected.Count+' sitemap URLs, approved legal pages, no vacancy markup, logo casing and discovery allowlists.')

@@ -33,7 +33,7 @@ try{
 $records=Get-Content (Join-Path $output 'artifact-manifest.json') -Raw | ConvertFrom-Json
 if(@($records).Count -ne $expected.Count+5 -or @($records | Where-Object {$_.sha256.Length -ne 64}).Count){throw 'Artifact checksum manifest invalid'}
 
-# An explicit production build must retain public indexing and draft policy exclusions.
+# An explicit production build must retain public indexing for approved legal pages.
 $production=Join-Path $run 'production-artifacts'
 & (Join-Path $project 'deployment\New-ReleaseArtifacts.ps1') -ProjectRoot $project -OutputDirectory $production -FrontendOnly -SearchVisibility Production
 $archive=[IO.Compression.ZipFile]::OpenRead((Join-Path $production 'frontend.zip'))
@@ -41,8 +41,8 @@ try{
     $reader=[IO.StreamReader]::new($archive.GetEntry('pages/home/index.html').Open());try{$homepageHtml=$reader.ReadToEnd()}finally{$reader.Dispose()}
     if(!$homepageHtml.Contains('<meta name="robots" content="index, follow">')){throw 'Production home accidentally noindexed.'}
     foreach($file in @('pages/legal/privacy.html','pages/legal/terms.html')){
-        $reader=[IO.StreamReader]::new($archive.GetEntry($file).Open());try{$draft=$reader.ReadToEnd()}finally{$reader.Dispose()}
-        if(!$draft.Contains('<meta name="robots" content="noindex, follow">')){throw 'Draft legal page accidentally indexable.'}
+        $reader=[IO.StreamReader]::new($archive.GetEntry($file).Open());try{$legalPage=$reader.ReadToEnd()}finally{$reader.Dispose()}
+        if(!$legalPage.Contains('<meta name="robots" content="index, follow">') -or $legalPage.Contains('pending review and approval')){throw 'Approved legal page must be publishable and indexable.'}
     }
     $reader=[IO.StreamReader]::new($archive.GetEntry('sitemap.xml').Open());try{[xml]$map=$reader.ReadToEnd()}finally{$reader.Dispose()}
     [xml]$sourceSiteMap=Get-Content -LiteralPath (Join-Path $project 'sitemap.xml') -Raw
@@ -64,7 +64,7 @@ $rejected=$false;try{& (Join-Path $project 'deployment\New-ReleaseArtifacts.ps1'
 # A published web.config carrying runtime values must be rejected, not shipped.
 [IO.File]::WriteAllText((Join-Path $published 'web.config'),'<configuration><system.webServer><aspNetCore><environmentVariables><environmentVariable name="Smtp__Password" value="synthetic-only" /></environmentVariables></aspNetCore></system.webServer></configuration>')
 $rejected=$false;try{& (Join-Path $project 'deployment\New-ReleaseArtifacts.ps1') -ProjectRoot $project -OutputDirectory (Join-Path $run 'blocked-config') -PublishedApiPath $published}catch{$rejected=$true};if(!$rejected){throw 'Environment values in artifact were accepted'}
-$result=[PSCustomObject]@{frontendFiles=$expected.Count;apiFixtureFiles=5;checksums=@($records).Count;sourceOrSensitiveFilesLeaked=0;poisonedPathsRejected=5;existingOutputProtected=$true;runtimeValuesRejected=$true;previewNoIndex=$true;productionIndexing=$true;draftPoliciesExcluded=$true;liveIisChanged=$false;apiBuild='Synthetic packaging fixture only; clean publish still required'}
+$result=[PSCustomObject]@{frontendFiles=$expected.Count;apiFixtureFiles=5;checksums=@($records).Count;sourceOrSensitiveFilesLeaked=0;poisonedPathsRejected=5;existingOutputProtected=$true;runtimeValuesRejected=$true;previewNoIndex=$true;productionIndexing=$true;approvedLegalPagesIndexable=$true;liveIisChanged=$false;apiBuild='Synthetic packaging fixture only; clean publish still required'}
 $result | ConvertTo-Json | Set-Content -LiteralPath (Join-Path $run 'test-result.json')
 $result | Format-List
 Write-Output 'PASS: artifact allowlists, omissions, checksums, blocked paths, overwrite refusal and runtime-value rejection.'
