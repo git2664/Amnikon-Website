@@ -34,7 +34,7 @@
       rgba(66, 156, 235, 0.12),
       transparent 60%
     ),
-    url("../../assets/images/career/image.png");
+    url("../../assets/images/career/image.optimized.jpg");
 
   background-size: cover;
 
@@ -1598,3 +1598,44 @@ RESUME SECTION
  #culture .benefit-panel {min-height:0;padding:16px 0 24px;}
 }
 @media(prefers-reduced-motion:reduce) {#culture .sidebar-progress {transition:none;}}
+
+/* Keep the resume upload within the Careers form on narrow screens. */
+.resume-container,
+.resume-card,
+#resume-form,
+#resume-form .input-group,
+#resume-form .upload-box {
+    box-sizing: border-box;
+    min-width: 0;
+    max-width: 100%;
+}
+
+#resume-form input:not([type="file"]),
+#resume-form textarea,
+#resume-form select {
+    box-sizing: border-box;
+    width: 100%;
+    min-width: 0;
+    max-width: 100%;
+}
+
+#resume-form input[type="file"] {
+    display: block;
+    box-sizing: border-box;
+    width: 100%;
+    min-width: 0;
+    max-width: 100%;
+    font-size: clamp(.68rem, 2.6vw, .95rem);
+}
+
+#resume-form .upload-box p,
+#resume-form label {
+    overflow-wrap: anywhere;
+}
+
+@media (max-width: 480px) {
+    .resume-section { padding-inline: 16px; }
+    .resume-container { padding-inline: 0; }
+    .resume-card { padding: 22px 16px; }
+    #resume-form .upload-box { padding: 16px 12px; }
+}

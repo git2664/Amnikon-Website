@@ -1,5 +1,5 @@
 /* Industry overview: shared brand styling with accessible sector cards. */
-.page-hero {min-height:85svh;display:flex;align-items:center;justify-content:center;text-align:center;position:relative;padding:165px 0 90px;border-bottom:0;background:linear-gradient(rgba(5,8,22,.72),rgba(5,8,22,.86)),url("../../assets/images/industries/ChatGPT Image Jul 2, 2026, 03_43_41 AM_New.png") center/cover no-repeat;}
+.page-hero {min-height:85svh;display:flex;align-items:center;justify-content:center;text-align:center;position:relative;padding:165px 0 90px;border-bottom:0;background:linear-gradient(rgba(5,8,22,.72),rgba(5,8,22,.86)),url("../../assets/images/industries/ChatGPT Image Jul 2, 2026, 03_43_41 AM_New.optimized.jpg") center/cover no-repeat;}
 .page-hero .container {max-width:970px;position:relative;}
 .page-hero h1 {font-size:clamp(2.6rem,5.5vw,4.7rem);line-height:1.12;}
 .page-hero .highlight {color:#59dfe6;}

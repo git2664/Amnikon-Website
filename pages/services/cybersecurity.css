@@ -89,7 +89,7 @@ body{
             rgba(6,5,8,.80),
             rgba(13, 8, 10, 0.334)
         ),
-        url("../../assets/images/services/security1.png")
+        url("../../assets/images/services/security1.optimized.jpg")
         center/cover no-repeat;
 
 }
@@ -2388,7 +2388,7 @@ body {
             rgba(7, 11, 18, 0.20),
             rgba(9, 13, 21, 0.48)
         ),
-        url("../../assets/images/services/security1.png")
+        url("../../assets/images/services/security1.optimized.jpg")
         center/cover no-repeat;
 }
 
@@ -2814,7 +2814,7 @@ body {
                 rgba(7, 11, 18, 0.58),
                 rgba(9, 13, 21, 0.70)
             ),
-            url("../../assets/images/services/security1.png")
+            url("../../assets/images/services/security1.optimized.jpg")
             center/cover no-repeat;
     }
 

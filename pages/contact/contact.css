@@ -18,7 +18,7 @@
   background:
     linear-gradient(rgb(0, 0, 0), rgba(21, 41, 67, 0)),
     radial-gradient(circle at center, rgba(37, 99, 235, 0.15), transparent 65%),
-    url("../../assets/images/contact/contact.png");
+    url("../../assets/images/contact/contact.optimized.jpg");
 
   background-size: cover;
 

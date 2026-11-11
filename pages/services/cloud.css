@@ -63,7 +63,7 @@ body {
             rgba(186, 184, 188, 0.25) 0%,
             transparent 30%
         ),
-        url("../../assets/images/services/cloud1.png");
+        url("../../assets/images/services/cloud1.optimized.jpg");
 
     background-size: cover;
     background-position: center;

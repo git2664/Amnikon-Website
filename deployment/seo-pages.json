@@ -1,9 +1,9 @@
 {
   "origin": "https://amnikontechnologies.com",
   "home": "pages/home/index.html",
-  "image": "assets/logos/Amnikon-logo.png",
-  "imageWidth": 4500,
-  "imageHeight": 2801,
+  "image": "assets/logos/Amnikon-logo.optimized.png",
+  "imageWidth": 1200,
+  "imageHeight": 747,
   "pages": [
     {
       "file": "pages/home/index.html",

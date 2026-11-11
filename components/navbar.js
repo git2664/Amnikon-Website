@@ -9,7 +9,7 @@
 
     <a href="/pages/home/index.html" class="nav-logo">
       <img
-        src="/assets/logos/Amnikon-logo.png"
+        src="/assets/logos/Amnikon-logo.optimized.png"
         alt="AMNIKON Technologies"
         onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
       >

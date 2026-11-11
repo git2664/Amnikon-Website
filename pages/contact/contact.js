@@ -137,19 +137,21 @@ document.addEventListener("DOMContentLoaded", () => {
        GSAP HERO ANIMATION
     ========================================================== */
 
-    if (typeof gsap === "undefined") {
-
-        console.warn("GSAP not loaded.");
-
-        return;
-
-    }
-
-    gsap.registerPlugin(ScrollTrigger);
-
     const hero = document.querySelector(".contact-hero");
 
     if (!hero) return;
+
+    // Keep the hero readable if an optional animation CDN is unavailable.
+    if (typeof window.gsap === "undefined") {
+        hero.querySelectorAll(".eyebrow, .hero-title span, p").forEach(element => {
+            element.style.opacity = "1";
+            element.style.transform = "none";
+            element.style.filter = "none";
+        });
+        return;
+    }
+
+    if (window.ScrollTrigger) gsap.registerPlugin(ScrollTrigger);
 
     const tl = gsap.timeline({
 
@@ -202,54 +204,25 @@ document.addEventListener("DOMContentLoaded", () => {
        Background Parallax
     ========================================================== */
 
-    gsap.to(".contact-hero .container", {
-
-        yPercent: -8,
-
-        ease: "none",
-
-        scrollTrigger: {
-
-            trigger: ".contact-hero",
-
-            start: "top top",
-
-            end: "bottom top",
-
-            scrub: true
-
-        }
-
-    });
+    if (window.ScrollTrigger) {
+        gsap.to(".contact-hero .container", {
+            yPercent: -8,
+            ease: "none",
+            scrollTrigger: {
+                trigger: hero,
+                start: "top top",
+                end: "bottom top",
+                scrub: true
+            }
+        });
+    }
 
 
     /* ==========================================================
        Decorative Rings
     ========================================================== */
 
-    gsap.from(".contact-hero .container::before", {
-
-        opacity: 0
-
-    });
-
-
-    /* ==========================================================
-       Floating Effect
-    ========================================================== */
-
-    gsap.to(".contact-hero .container", {
-
-        y: -10,
-
-        repeat: -1,
-
-        yoyo: true,
-
-        ease: "sine.inOut",
-
-        duration: 4
-
-    });
+    // Decorative pseudo-elements are CSS-only; targeting one with GSAP creates
+    // selector warnings in browsers and does not animate the generated element.
 
 });
